@@ -1,0 +1,6 @@
+.element__title_overflow {
+  text-overflow: ellipsis;
+  overflow: hidden;
+ white-space: nowrap;
+ max-width: 190px;
+}
