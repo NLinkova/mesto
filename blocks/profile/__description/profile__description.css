@@ -8,3 +8,11 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
+@media screen and (max-width: 650px) {
+  .profile__description {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
+
