@@ -6,7 +6,7 @@
   text-align: center;
   text-decoration: none;
   border: none;
-  background: url("/images/like.svg");
+  background: url("../../../images/like.svg");
 }
 
 .element__like:hover {
@@ -14,5 +14,5 @@
 }
 
 .element__like:active {
-  background: url("/images/like_black.svg");
+  background: url("../../../images/like_black.svg");
 }
