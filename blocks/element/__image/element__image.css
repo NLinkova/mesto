@@ -1,5 +1,7 @@
 .element__image {
-  max-width: 282px;
-  max-height: 282px;
+  width: 282px;
+  height: 282px;
   object-fit: cover;
+  margin: 0;
+
 }
