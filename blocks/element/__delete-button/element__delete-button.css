@@ -7,6 +7,9 @@
   text-align: center;
   text-decoration: none;
   border: none;
+  position: absolute;
+  top: 18px;
+  left: 249px;
   background: url("../../../images/trash.svg");
 
 }
