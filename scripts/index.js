@@ -1,10 +1,7 @@
 //Popups modal windows
-
 const editProfileModal = document.querySelector('.popup_type_edit-profile');
 const addCardModal = document.querySelector('.popup_type_add-card');
 const imageModal = document.querySelector('.popup_type_image');
-
-
 
 const editForm = editProfileModal.querySelector('.popup__form');
 const addCardForm = addCardModal.querySelector('.popup__form');
@@ -16,6 +13,7 @@ const addCardOpenButton = document.querySelector('.profile__add-button');
 
 const addCardCloseButton = addCardModal.querySelector('.popup__close-button');
 const editProfileCloseButton = editProfileModal.querySelector('.popup__close-button');
+const imageModalCloseButton = imageModal.querySelector('.popup__close-button');
 
 const submitPopupButton = document.querySelector('.popup__submit-button');
 
@@ -29,7 +27,7 @@ const jobInput = editForm.querySelector('.popup__field_type_desc');
 const placeInput = addCardForm.querySelector('.popup__field_type_place');
 const urlInput = addCardForm.querySelector('.popup__field_type_url');
 
-const imageModalTitle = imageModal.querySelector('.popup__title');
+const imageModalCaption = imageModal.querySelector('.popup__caption');
 const imageModalImg = imageModal.querySelector('.popup__image');
 
 function togglePopup(modalWindow) {
@@ -50,11 +48,11 @@ function formSubmitHandler(evt) {
 
 function addCardSubmitHandler(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-
   renderCard({name: placeInput.value, link: urlInput.value})
-
   togglePopup(addCardModal)
 };
+
+
 
 editProfileOpenButton.addEventListener('click', () => {
   togglePopup(editProfileModal)
@@ -72,12 +70,21 @@ addCardCloseButton.addEventListener('click', () => {
   togglePopup(addCardModal)
 });
 
+imageModal.addEventListener('click', () => {
+  togglePopup(imageModal)
+});
+
+// imageModalCloseButton.addEventListener('click', () => {
+//   console.log(EventTarget);
+//   togglePopup(imageModal)
+// });
+
 editForm.addEventListener('submit', formSubmitHandler);
 
 addCardForm.addEventListener('submit', addCardSubmitHandler);
 
 
-
+// template массив для карточек
 const initialCards = [
   {
     name: 'Архыз',
@@ -108,9 +115,6 @@ const initialCards = [
 const cardTemplate = document.querySelector('.template-card').content.querySelector('.element');
 const elements = document.querySelector('.elements');
 
-//function handleImageClick() {
-  //imageModalTitle.textContent =
-//};
 
 function createCard(data) {
   const cardElement = cardTemplate.cloneNode(true); //тру чтобы все входяшиее элементы сохранились
@@ -118,17 +122,31 @@ function createCard(data) {
   const cardTitle = cardElement.querySelector('.element__title');
   const cardLikeButton = cardElement.querySelector('.element__like');
   const cardDeleteButton = cardElement.querySelector('.element__delete-button');
+  const imageModalCloseButton = imageModal.querySelector('.popup__close-button');
 
+
+ // событие лайка
   cardLikeButton.addEventListener('click', () => {
     cardLikeButton.classList.toggle('element__like_active');
   });
-
+ // событие удаления
   cardDeleteButton.addEventListener('click', () => {
     cardElement.remove();
   });
 
-  cardImage.addEventListener('click', () => {
-    handleImageClick();
+  imageModalCloseButton.addEventListener('click', () => {
+    console.log(EventTarget);
+    togglePopup(imageModal)
+  });
+
+
+  // popup big image
+
+  cardImage.addEventListener('click', function () {
+    imageModalCaption.textContent = data.name;
+    imageModalImg.src = data.link;
+    imageModalImg.alt = 'Фотография';
+    togglePopup(imageModal)
   });
 
   cardTitle.textContent = data.name;
@@ -145,3 +163,5 @@ function renderCard(data) {
 initialCards.forEach((data) => {
   renderCard(data);
 });
+
+
