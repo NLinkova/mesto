@@ -9,11 +9,16 @@
   background: transparent;
   text-align: center;
   text-decoration: none;
-
 }
 
 .profile__add-button:hover {
   opacity: 0.8;
+}
+
+@media screen and (max-width: 940px) {
+  .profile__add-button {
+    margin-left: 10px;
+  }
 }
 
 @media screen and (max-width: 650px) {
