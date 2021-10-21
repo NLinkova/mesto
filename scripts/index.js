@@ -6,7 +6,6 @@ const imageModal = document.querySelector('.popup_type_image');
 const editForm = editProfileModal.querySelector('.popup__form');
 const addCardForm = addCardModal.querySelector('.popup__form');
 
-
 //Buttons
 const editProfileOpenButton = document.querySelector('.profile__edit-button');
 const addCardOpenButton = document.querySelector('.profile__add-button');
@@ -30,61 +29,9 @@ const urlInput = addCardForm.querySelector('.popup__field_type_url');
 const imageModalCaption = imageModal.querySelector('.popup__caption');
 const imageModalImg = imageModal.querySelector('.popup__image');
 
-function togglePopup(modalWindow) {
-  if (!modalWindow.classList.contains('popup_open')) {
-    nameInput.value = profileName.textContent;
-    jobInput.value = profileDesc.textContent;
-  }
-  modalWindow.classList.toggle('popup_open');
-};
-
-function formSubmitHandler(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-  profileName.textContent = nameInput.value;
-  profileDesc.textContent = jobInput.value;
-  togglePopup(editProfileModal)
-};
-
-
-function addCardSubmitHandler(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-  renderCard({name: placeInput.value, link: urlInput.value})
-  togglePopup(addCardModal)
-};
-
-
-
-editProfileOpenButton.addEventListener('click', () => {
-  togglePopup(editProfileModal)
-});
-
-editProfileCloseButton.addEventListener('click', () => {
-  togglePopup(editProfileModal)
-});
-
-addCardOpenButton.addEventListener('click', () => {
-  togglePopup(addCardModal)
-});
-
-addCardCloseButton.addEventListener('click', () => {
-  togglePopup(addCardModal)
-});
-
-imageModal.addEventListener('click', () => {
-  togglePopup(imageModal)
-});
-
-// imageModalCloseButton.addEventListener('click', () => {
-//   console.log(EventTarget);
-//   togglePopup(imageModal)
-// });
-
-editForm.addEventListener('submit', formSubmitHandler);
-
-addCardForm.addEventListener('submit', addCardSubmitHandler);
-
-
-// template массив для карточек
+// Template
+const cardTemplate = document.querySelector('.template-card').content.querySelector('.element');
+const elements = document.querySelector('.elements');
 const initialCards = [
   {
     name: 'Архыз',
@@ -112,8 +59,30 @@ const initialCards = [
   }
 ];
 
-const cardTemplate = document.querySelector('.template-card').content.querySelector('.element');
-const elements = document.querySelector('.elements');
+editProfileOpenButton.addEventListener('click', () => {
+  togglePopup(editProfileModal);
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileDesc.textContent;
+});
+
+editProfileCloseButton.addEventListener('click', () => {
+  togglePopup(editProfileModal)
+});
+
+addCardOpenButton.addEventListener('click', () => {
+  togglePopup(addCardModal)
+});
+
+addCardCloseButton.addEventListener('click', () => {
+  togglePopup(addCardModal)
+});
+
+imageModalCloseButton.addEventListener('click', () => {
+  togglePopup(imageModal)
+});
+
+editForm.addEventListener('submit', formSubmitHandler);
+addCardForm.addEventListener('submit', addCardSubmitHandler);
 
 
 function createCard(data) {
@@ -122,8 +91,6 @@ function createCard(data) {
   const cardTitle = cardElement.querySelector('.element__title');
   const cardLikeButton = cardElement.querySelector('.element__like');
   const cardDeleteButton = cardElement.querySelector('.element__delete-button');
-  const imageModalCloseButton = imageModal.querySelector('.popup__close-button');
-
 
  // событие лайка
   cardLikeButton.addEventListener('click', () => {
@@ -134,14 +101,7 @@ function createCard(data) {
     cardElement.remove();
   });
 
-  imageModalCloseButton.addEventListener('click', () => {
-    console.log(EventTarget);
-    togglePopup(imageModal)
-  });
-
-
   // popup big image
-
   cardImage.addEventListener('click', function () {
     imageModalCaption.textContent = data.name;
     imageModalImg.src = data.link;
@@ -164,4 +124,20 @@ initialCards.forEach((data) => {
   renderCard(data);
 });
 
+function togglePopup(modalWindow) {
+  modalWindow.classList.toggle('popup_open');
+};
 
+function formSubmitHandler(evt) {
+  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+  profileName.textContent = nameInput.value;
+  profileDesc.textContent = jobInput.value;
+  togglePopup(editProfileModal)
+};
+
+function addCardSubmitHandler(evt) {
+  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+  renderCard({name: placeInput.value, link: urlInput.value});
+  togglePopup(addCardModal);
+  addCardForm.reset();
+};
