@@ -2,7 +2,7 @@
   margin: 195px auto auto;
   background-color: #FFFFFF;
   width: 430px;
-  height: 330px;
+  min-height: 330px;
   border-radius: 10px;
   position: relative;
 }
@@ -10,6 +10,6 @@
 @media screen and (max-width: 650px) {
   .popup__container {
     width: 282px;
-    height: 322px;
+    min-height: 322px;
   }
 }
