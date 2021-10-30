@@ -34,10 +34,12 @@ const hasNoInputValue = (inputList) => {
 
 const disableSubmitButton = (buttonElement, inactiveButtonClass) => { // отключение кнопки
   buttonElement.classList.add(inactiveButtonClass);
+  buttonElement.setAttribute("disabled", "disabled");
 };
 
 const enableSubmitButton = (buttonElement, inactiveButtonClass) => { // включение кнопки
   buttonElement.classList.remove(inactiveButtonClass);
+  buttonElement.removeAttribute("disabled", "disabled");
 };
 
 const toggleButtonState = (formElement, inputList, submitButtonSelector, inactiveButtonClass) => { // переключение состояние кнопки сабмит

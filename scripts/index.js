@@ -1,4 +1,15 @@
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__field',
+  submitButtonSelector: '.popup__submit-button',
+  inactiveButtonClass: 'popup__submit-button_invalid', // без . потому что это класс, а не селектор
+  inputErrorClass: 'popup__field_type_error',
+  errorClass: 'error_visible'
+};
+enableValidation(validationConfig);
+
 //Popups modal windows
+const popup = document.querySelector('.popup');
 const editProfileModal = document.querySelector('.popup_type_edit-profile');
 const addCardModal = document.querySelector('.popup_type_add-card');
 const imageModal = document.querySelector('.popup_type_image');
@@ -69,6 +80,10 @@ editProfileCloseButton.addEventListener('click', () => {
   togglePopup(editProfileModal)
 });
 
+// popupClose.addEventListener('click', (modalWindow) => {
+//   modalWindow.classList.remove('popup_open');
+// });
+
 addCardOpenButton.addEventListener('click', () => {
   togglePopup(addCardModal)
 });
@@ -81,9 +96,21 @@ imageModalCloseButton.addEventListener('click', () => {
   togglePopup(imageModal)
 });
 
+
 editForm.addEventListener('submit', formSubmitHandler);
 addCardForm.addEventListener('submit', addCardSubmitHandler);
 
+document.addEventListener('keydown', function(evt) {
+  if (evt.key === 'Escape') {
+    const popupClose = document.querySelector(".popup_open");
+    togglePopup(popupClose);
+  }
+});
+
+const closePopup = () => {
+    const item = document.querySelector('popup_open')
+      togglePopup(item);
+};
 
 function createCard(data) {
   const cardElement = cardTemplate.cloneNode(true); //тру чтобы все входяшиее элементы сохранились
