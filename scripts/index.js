@@ -9,7 +9,6 @@ const validationConfig = {
 enableValidation(validationConfig);
 
 //Popups modal windows
-const popup = document.querySelector('.popup');
 const editProfileModal = document.querySelector('.popup_type_edit-profile');
 const addCardModal = document.querySelector('.popup_type_add-card');
 const imageModal = document.querySelector('.popup_type_image');
@@ -39,6 +38,8 @@ const urlInput = addCardForm.querySelector('.popup__field_type_url');
 
 const imageModalCaption = imageModal.querySelector('.popup__caption');
 const imageModalImg = imageModal.querySelector('.popup__image');
+
+const ESC_KEYCODE = 27;
 
 // Template
 const cardTemplate = document.querySelector('.template-card').content.querySelector('.element');
@@ -70,48 +71,6 @@ const initialCards = [
   }
 ];
 
-editProfileOpenButton.addEventListener('click', () => {
-  togglePopup(editProfileModal);
-  nameInput.value = profileName.textContent;
-  jobInput.value = profileDesc.textContent;
-});
-
-editProfileCloseButton.addEventListener('click', () => {
-  togglePopup(editProfileModal)
-});
-
-// popupClose.addEventListener('click', (modalWindow) => {
-//   modalWindow.classList.remove('popup_open');
-// });
-
-addCardOpenButton.addEventListener('click', () => {
-  togglePopup(addCardModal)
-});
-
-addCardCloseButton.addEventListener('click', () => {
-  togglePopup(addCardModal)
-});
-
-imageModalCloseButton.addEventListener('click', () => {
-  togglePopup(imageModal)
-});
-
-
-editForm.addEventListener('submit', formSubmitHandler);
-addCardForm.addEventListener('submit', addCardSubmitHandler);
-
-document.addEventListener('keydown', function(evt) {
-  if (evt.key === 'Escape') {
-    const popupClose = document.querySelector(".popup_open");
-    togglePopup(popupClose);
-  }
-});
-
-const closePopup = () => {
-    const item = document.querySelector('popup_open')
-      togglePopup(item);
-};
-
 function createCard(data) {
   const cardElement = cardTemplate.cloneNode(true); //тру чтобы все входяшиее элементы сохранились
   const cardImage = cardElement.querySelector('.element__image');
@@ -133,7 +92,7 @@ function createCard(data) {
     imageModalCaption.textContent = data.name;
     imageModalImg.src = data.link;
     imageModalImg.alt = 'Фотография';
-    togglePopup(imageModal)
+    openPopup(imageModal)
   });
 
   cardTitle.textContent = data.name;
@@ -151,20 +110,76 @@ initialCards.forEach((data) => {
   renderCard(data);
 });
 
-function togglePopup(modalWindow) {
-  modalWindow.classList.toggle('popup_open');
+function openPopup(modalWindow) {
+  modalWindow.classList.add('popup_opened');
+
+  document.addEventListener('keydown',  closeByEsc);
+  document.addEventListener('click',  closeByOverlayClick);
 };
 
-function formSubmitHandler(evt) {
+function closePopup(modalWindow) {
+  modalWindow.classList.remove('popup_opened');
+
+  document.removeEventListener('keydown',  closeByEsc);
+  document.removeEventListener('click',  closeByOverlayClick);
+};
+
+function submitProfileForm(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   profileName.textContent = nameInput.value;
   profileDesc.textContent = jobInput.value;
-  togglePopup(editProfileModal)
+  closePopup(editProfileModal)
 };
 
 function addCardSubmitHandler(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   renderCard({name: placeInput.value, link: urlInput.value});
-  togglePopup(addCardModal);
+
+  closePopup(addCardModal);
   addCardForm.reset();
+
+  const submitPopupButton = addCardForm.querySelector('.popup__submit-button');
+  submitPopupButton.classList.add('popup__submit-button_invalid');
+  submitPopupButton.setAttribute("disabled", "disabled");
 };
+
+//закрытие по esc
+function closeByEsc(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
+  }
+};
+
+//закрытие по overlay
+function closeByOverlayClick(evt) {
+  if (evt.target.classList.contains('popup')) {
+      const openedPopup = document.querySelector('.popup_opened');
+      closePopup(openedPopup);
+  }
+};
+
+editProfileOpenButton.addEventListener('click', () => {
+  openPopup(editProfileModal);
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileDesc.textContent;
+});
+
+editProfileCloseButton.addEventListener('click', () => {
+  closePopup(editProfileModal)
+});
+
+addCardOpenButton.addEventListener('click', () => {
+  openPopup(addCardModal)
+});
+
+addCardCloseButton.addEventListener('click', () => {
+  closePopup(addCardModal)
+});
+
+imageModalCloseButton.addEventListener('click', () => {
+  closePopup(imageModal)
+});
+
+editForm.addEventListener('submit', submitProfileForm);
+addCardForm.addEventListener('submit', addCardSubmitHandler);
