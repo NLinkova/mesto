@@ -1,5 +1,6 @@
 import Card from "./Card.js";
 import { openPopup } from './utils.js';
+import { closePopup } from './utils.js';
 import FormValidator from "./FormValidator.js";
 
 const config = {
@@ -11,13 +12,10 @@ const config = {
   errorClass: 'error_visible'
 };
 
-
 //Popups modal windows
-const popupElement = document.querySelector('.popup');
 const popups = document.querySelectorAll('.popup');
 const editProfileModal = document.querySelector('.popup_type_edit-profile');
 const addCardModal = document.querySelector('.popup_type_add-card');
-const imageModal = document.querySelector('.popup_type_image');
 
 const editForm = editProfileModal.querySelector('.popup__form');
 const addCardForm = addCardModal.querySelector('.popup__form');
@@ -37,7 +35,6 @@ const placeInput = addCardForm.querySelector('.popup__field_type_place');
 const urlInput = addCardForm.querySelector('.popup__field_type_url');
 
 // инструкции валидации
-
 const editFormValidator = new FormValidator(config, editForm);
 const cardFormValidator = new FormValidator(config, addCardForm);
 
@@ -74,66 +71,42 @@ const initialCards = [
   }
 ];
 
-
-
 //функция создания карточки
-function createCard(data, templateSelector, openPopup) {
-  const card = new Card(data, templateSelector, openPopup);
+function createCard(data) {
+  const card = new Card(data, '.template-card'); //тут определяется templateSelector
   const cardElement = card.generateCard();
   return cardElement
 }
-
 
 function renderCard(data) {
   elements.prepend(createCard(data));
 };
 
-
-//функция открытия любого попапа
-// const openPopup = (popupElement) => {
-//   popupElement.classList.add('popup_opened');
-//   document.addEventListener('keydown',  closeByEsc);
-// };
-
-//закрытия
-function closePopup(popupElement) {
-  popupElement.classList.remove('popup_opened');
-  document.removeEventListener('keydown',  closeByEsc);
-};
-
 function submitProfileForm(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+  evt.preventDefault();
   profileName.textContent = nameInput.value;
   profileDesc.textContent = jobInput.value;
   closePopup(editProfileModal)
 };
 
 function addCardSubmitHandler(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+  evt.preventDefault();
   renderCard({name: placeInput.value, link: urlInput.value});
 
   closePopup(addCardModal);
   addCardForm.reset();
 };
 
-//закрытие по esc
-function closeByEsc(evt) {
-  if (evt.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup_opened');
-    closePopup(openedPopup);
-  }
-};
-
 editProfileOpenButton.addEventListener('click', () => {
   openPopup(editProfileModal);
   nameInput.value = profileName.textContent;
   jobInput.value = profileDesc.textContent;
-  editFormValidator.resetValidation();
+  editFormValidator.resetValidation(); //стирает ошибки от предыдущего открытия и меняет кнопку
 });
 
 addCardOpenButton.addEventListener('click', () => {
   openPopup(addCardModal);
-  cardFormValidator.resetValidation();
+  cardFormValidator.resetValidation(); //стирает ошибки от предыдущего открытия и меняет кнопку
 });
 
 // универсальный слушатель для закрытия любого попапа по оверлею и крестику
@@ -152,12 +125,8 @@ popups.forEach((popup) => {
 editForm.addEventListener('submit', submitProfileForm);
 addCardForm.addEventListener('submit', addCardSubmitHandler);
 
-
-initialCards.forEach((data, templateSelector, openPopup) => {
-  const card = new Card(data, templateSelector, openPopup);
-  const cardElement = card.generateCard();
-
-  // Добавляем в DOM
-  document.querySelector('.elements').append(cardElement);
+//цикл для размещения всех карточек
+initialCards.forEach((data) => {
+  elements.append(createCard(data));
 });
 

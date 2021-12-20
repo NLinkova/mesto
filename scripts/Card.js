@@ -6,8 +6,8 @@ export default class Card {
   constructor(data, templateSelector) {
     this._name = data.name;
     this._link = data.link;
-    this._templateSelector = document.querySelector('.template-card').content;
-    this._openPopup = openPopup;
+    this._templateSelector = document.querySelector(templateSelector).content; //templateSelector находится в index.js
+    this._openPopup = openPopup; //без объявления функции в конструкторе, она работать не будет
   }
 
   _getTemplate() {

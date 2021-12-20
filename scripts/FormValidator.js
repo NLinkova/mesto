@@ -69,6 +69,7 @@ export default class FormValidator {
     }
   };
 
+  //фукция стирания ошибок при открытии формы
   resetValidation() {
     this._toggleButtonState();
 
@@ -78,11 +79,6 @@ export default class FormValidator {
 
   }
   _setEventListeners = () => {
-    const { inputSelector, submitButtonSelector,
-      inactiveButtonClass } = this._config;
-        // чтобы проверить состояние кнопки в самом начале
-    this._toggleButtonState(this._submitButtonSelector, this._inactiveButtonClass);
-
     this._inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._checkInputValidity(inputElement);
@@ -90,7 +86,6 @@ export default class FormValidator {
         this._toggleButtonState(this._submitButtonSelector, this._inactiveButtonClass);
       });
     });
-
   };
 
   enableValidation = () => {
