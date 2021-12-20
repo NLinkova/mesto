@@ -1,13 +1,13 @@
+import { openPopup } from './utils.js';
 const imageModalCaption = document.querySelector('.popup__caption');
 const imageModalImg = document.querySelector('.popup__image');
 
-
-import openPopup from './index.js';
 export default class Card {
   constructor(data, templateSelector) {
     this._name = data.name;
     this._link = data.link;
-    this._templateSelector = document.querySelector('.template-card').content;;
+    this._templateSelector = document.querySelector('.template-card').content;
+    this._openPopup = openPopup;
   }
 
   _getTemplate() {
@@ -31,7 +31,7 @@ export default class Card {
       imageModalCaption.textContent = this._name;
       imageModalImg.src = this._link;
       imageModalImg.alt = this._name;
-      openPopup(imageModal)
+      this._openPopup(imageModal)
     });
   };
 

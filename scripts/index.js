@@ -1,4 +1,5 @@
 import Card from "./Card.js";
+import { openPopup } from './utils.js';
 import FormValidator from "./FormValidator.js";
 
 const config = {
@@ -73,9 +74,11 @@ const initialCards = [
   }
 ];
 
+
+
 //функция создания карточки
-function createCard(data) {
-  const card = new Card(data);
+function createCard(data, templateSelector, openPopup) {
+  const card = new Card(data, templateSelector, openPopup);
   const cardElement = card.generateCard();
   return cardElement
 }
@@ -87,19 +90,15 @@ function renderCard(data) {
 
 
 //функция открытия любого попапа
-export default function openPopup(popupElement) {
-  popupElement.classList.add('popup_opened');
-
-  document.addEventListener('keydown',  closeByEsc);
-  // document.addEventListener('click',  closeByOverlayClick);
-};
+// const openPopup = (popupElement) => {
+//   popupElement.classList.add('popup_opened');
+//   document.addEventListener('keydown',  closeByEsc);
+// };
 
 //закрытия
 function closePopup(popupElement) {
   popupElement.classList.remove('popup_opened');
-
   document.removeEventListener('keydown',  closeByEsc);
-  // document.removeEventListener('click',  closeByOverlayClick);
 };
 
 function submitProfileForm(evt) {
@@ -154,8 +153,8 @@ editForm.addEventListener('submit', submitProfileForm);
 addCardForm.addEventListener('submit', addCardSubmitHandler);
 
 
-initialCards.forEach((data) => {
-  const card = new Card(data);
+initialCards.forEach((data, templateSelector, openPopup) => {
+  const card = new Card(data, templateSelector, openPopup);
   const cardElement = card.generateCard();
 
   // Добавляем в DOM
