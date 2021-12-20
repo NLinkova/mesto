@@ -1,86 +1,162 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mesto</title>
-  <link rel="stylesheet" href="./pages/index.css">
-</head>
-<body class="page">
-  <header class="header">
-    <img class="header__logo" src="./images/logo.svg" alt="логотип страницы место">
-  </header>
-  <main class="content">
-    <section class="profile">
-      <img class="profile__avatar" src="./images/avatar.jpg" alt="аватар пользователя страницы">
-      <div class="profile__info">
-        <h1 class="profile__name">Жак-Ив Кусто</h1>
-        <button type="button" class="profile__edit-button">
-          <img class="profile__pencil" src="./images/pencil.svg" alt="иконка карандаша">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mesto</title>
+    <link rel="stylesheet" href="./pages/index.css" />
+  </head>
+  <body class="page">
+    <header class="header">
+      <img
+        class="header__logo"
+        src="./images/logo.svg"
+        alt="логотип страницы место"
+      />
+    </header>
+    <main class="content">
+      <section class="profile">
+        <img
+          class="profile__avatar"
+          src="./images/avatar.jpg"
+          alt="аватар пользователя страницы"
+        />
+        <div class="profile__info">
+          <h1 class="profile__name">Жак-Ив Кусто</h1>
+          <button type="button" class="profile__edit-button">
+            <img
+              class="profile__pencil"
+              src="./images/pencil.svg"
+              alt="иконка карандаша"
+            />
+          </button>
+          <p class="profile__description">Исследователь океана</p>
+        </div>
+        <button type="button" class="profile__add-button">
+          <img
+            class="profile__plus"
+            src="./images/plus.svg"
+            alt="иконка плюса"
+          />
         </button>
-        <p class="profile__description">Исследователь океана</p>
+      </section>
+      <section class="elements">
+        <!-- контейнер для карточек  -->
+      </section>
+      <!-- попап редактирования имени профиля -->
+      <div class="popup popup_type_edit-profile">
+        <div class="popup__container">
+          <button type="button" class="popup__close-button">
+            <img
+              class="popup__cross"
+              src="./images/close_icon.svg"
+              alt="иконка крестика"
+            />
+          </button>
+          <form class="popup__form" name="edit-form" novalidate>
+            <h3 class="popup__title">Редактировать профиль</h3>
+            <input
+              type="text"
+              name="name"
+              id="user-name"
+              class="popup__field popup__field_type_name"
+              placeholder="Имя"
+              minlength="2"
+              maxlength="40"
+              required
+            />
+            <span id="user-name-error" class="error"></span>
+            <input
+              type="text"
+              name="desc"
+              id="desc"
+              class="popup__field popup__field_type_desc"
+              placeholder="Описание"
+              minlength="2"
+              maxlength="200"
+              required
+            />
+            <span id="desc-error" class="error"></span>
+            <button type="submit" class="popup__submit-button">
+              Сохранить
+            </button>
+          </form>
+        </div>
       </div>
-      <button type="button" class="profile__add-button">
-        <img class="profile__plus" src="./images/plus.svg" alt="иконка плюса">
-      </button>
-    </section>
-    <section class="elements">
-    </section>
-    <div class="popup popup_type_edit-profile">
-      <div class="popup__container">
-        <button type="button" class="popup__close-button">
-          <img class="popup__cross" src="./images/close_icon.svg" alt="иконка крестика">
-        </button>
-        <form class="popup__form" name="edit-form" novalidate>
-          <h3 class="popup__title">Редактировать профиль</h3>
-          <input type="text" name="name" id="user-name" class="popup__field popup__field_type_name" placeholder="Имя" minlength="2" maxlength="40" required>
-          <span id="user-name-error" class="error"></span>
-          <input type="text" name="desc" id="desc" class="popup__field popup__field_type_desc" placeholder="Описание" minlength="2" maxlength="200" required>
-          <span id="desc-error" class="error"></span>
-          <button type="submit" class="popup__submit-button">Сохранить</button>
-        </form>
+      <!-- попап для добавления новой карточки -->
+      <div class="popup popup_type_add-card">
+        <div class="popup__container">
+          <button type="button" class="popup__close-button">
+            <img
+              class="popup__cross"
+              src="./images/close_icon.svg"
+              alt="иконка крестика"
+            />
+          </button>
+          <form class="popup__form" name="add-card" novalidate>
+            <h3 class="popup__title">Новое место</h3>
+            <input
+              type="text"
+              name="place"
+              id="place"
+              class="popup__field popup__field_type_place"
+              placeholder="Название"
+              minlength="2"
+              maxlength="30"
+              required
+            />
+            <span id="place-error" class="error"></span>
+            <input
+              type="url"
+              name="url"
+              id="link"
+              class="popup__field popup__field_type_url"
+              placeholder="Ссылка на картинку"
+              required
+            />
+            <span id="link-error" class="error"></span>
+            <button type="submit" class="popup__submit-button">Создать</button>
+          </form>
+        </div>
       </div>
-    </div>
-    <div class="popup popup_type_add-card">
-      <div class="popup__container">
-        <button type="button" class="popup__close-button">
-          <img class="popup__cross" src="./images/close_icon.svg" alt="иконка крестика">
-        </button>
-        <form class="popup__form" name="add-card" novalidate>
-          <h3 class="popup__title">Новое место</h3>
-          <input type="text" name="place" id ="place" class="popup__field popup__field_type_place" placeholder="Название" minlength="2" maxlength="30" required>
-          <span id="place-error" class="error"></span>
-          <input type="url" name="url" id="link" class="popup__field popup__field_type_url" placeholder="Ссылка на картинку" required>
-          <span id="link-error" class="error"></span>
-          <button type="submit" class="popup__submit-button">Создать</button>
-        </form>
+      <!-- попап для большой картинки карточки -->
+      <div class="popup popup_type_image">
+        <div class="popup__content">
+          <button type="button" class="popup__close-button">
+            <img
+              class="popup__cross"
+              src="./images/close_icon.svg"
+              alt="иконка крестика"
+            />
+          </button>
+          <img
+            class="popup__image"
+            src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg"
+            alt=""
+          />
+          <h3 class="popup__caption"></h3>
+        </div>
       </div>
-    </div>
-    <div class="popup popup_type_image">
-      <div class="popup__content">
-        <button type="button" class="popup__close-button">
-          <img class="popup__cross" src="./images/close_icon.svg" alt="иконка крестика">
-        </button>
-        <img class="popup__image" src='https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg' alt=''>
-        <h3 class="popup__caption"></h3>
+    </main>
+    <footer class="footer">
+      <p class="footer__copyright">&copy;2021 Mesto Russia</p>
+    </footer>
+    <!-- шаблон карточки -->
+    <template class="template-card">
+      <div class="element">
+        <button type="button" class="element__delete-button"></button>
+        <img
+          class="element__image"
+          src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg"
+          alt=""
+        />
+        <div class="element__group">
+          <h2 class="element__title"></h2>
+          <button type="button" class="element__like"></button>
+        </div>
       </div>
-    </div>
-  </main>
-  <footer class="footer">
-    <p class="footer__copyright">&copy;2021 Mesto Russia</p>
-  </footer>
-  <template class="template-card">
-    <div class="element">
-      <button type="button" class="element__delete-button"></button>
-      <img class="element__image" src='https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg' alt=''>
-      <div class="element__group">
-        <h2 class="element__title"></h2>
-        <button type="button" class="element__like"></button>
-      </div>
-    </div>
-  </template>
-<script src="./scripts/index.js" defer></script>
-<script src="./scripts/validate.js"></script>
-</body>
+    </template>
+    <script type="module" src="./scripts/index.js" defer></script>
+  </body>
 </html>

@@ -1,4 +1,7 @@
-const validationConfig = {
+import Card from "./Card.js";
+import FormValidator from "./FormValidator.js";
+
+const config = {
   formSelector: '.popup__form',
   inputSelector: '.popup__field',
   submitButtonSelector: '.popup__submit-button',
@@ -6,9 +9,10 @@ const validationConfig = {
   inputErrorClass: 'popup__field_type_error',
   errorClass: 'error_visible'
 };
-enableValidation(validationConfig);
+
 
 //Popups modal windows
+const popupElement = document.querySelector('.popup');
 const editProfileModal = document.querySelector('.popup_type_edit-profile');
 const addCardModal = document.querySelector('.popup_type_add-card');
 const imageModal = document.querySelector('.popup_type_image');
@@ -41,6 +45,16 @@ const imageModalImg = imageModal.querySelector('.popup__image');
 
 const ESC_KEYCODE = 27;
 
+
+// инструкции валидации
+
+const editFormValidator = new FormValidator(config, editForm);
+const cardFormValidator = new FormValidator(config, addCardForm);
+
+editFormValidator.enableValidation();
+cardFormValidator.enableValidation();
+
+
 // Template
 const cardTemplate = document.querySelector('.template-card').content.querySelector('.element');
 const elements = document.querySelector('.elements');
@@ -71,6 +85,7 @@ const initialCards = [
   }
 ];
 
+//функция создания карточки
 function createCard(data) {
   const cardElement = cardTemplate.cloneNode(true); //тру чтобы все входяшиее элементы сохранились
   const cardImage = cardElement.querySelector('.element__image');
@@ -102,23 +117,27 @@ function createCard(data) {
   return cardElement;
 };
 
+
+
 function renderCard(data) {
   elements.prepend(createCard(data));
 };
 
-initialCards.forEach((data) => {
-  renderCard(data);
-});
+// initialCards.forEach((data) => {
+//   renderCard(data);
+// });
 
-function openPopup(modalWindow) {
-  modalWindow.classList.add('popup_opened');
+//функция открытия любого попапа
+function openPopup(popupElement) {
+  popupElement.classList.add('popup_opened');
 
   document.addEventListener('keydown',  closeByEsc);
   document.addEventListener('click',  closeByOverlayClick);
 };
 
-function closePopup(modalWindow) {
-  modalWindow.classList.remove('popup_opened');
+//закрытия
+function closePopup(popupElement) {
+  popupElement.classList.remove('popup_opened');
 
   document.removeEventListener('keydown',  closeByEsc);
   document.removeEventListener('click',  closeByOverlayClick);
@@ -181,5 +200,15 @@ imageModalCloseButton.addEventListener('click', () => {
   closePopup(imageModal)
 });
 
+
 editForm.addEventListener('submit', submitProfileForm);
 addCardForm.addEventListener('submit', addCardSubmitHandler);
+
+
+initialCards.forEach((data) => {
+  const card = new Card(data);
+  const cardElement = card.generateCard();
+
+  // Добавляем в DOM
+  document.querySelector('.elements').append(cardElement);
+});
