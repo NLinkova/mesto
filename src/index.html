@@ -23,7 +23,7 @@
           alt="аватар пользователя страницы"
         />
         <div class="profile__info">
-          <h1 class="profile__name">Жак-Ив Кусто</h1>
+          <h1 class="profile__name"></h1>
           <button type="button" class="profile__edit-button">
             <img
               class="profile__pencil"
@@ -31,7 +31,7 @@
               alt="иконка карандаша"
             />
           </button>
-          <p class="profile__description">Исследователь океана</p>
+          <p class="profile__description"></p>
         </div>
         <button type="button" class="profile__add-button">
           <img
@@ -54,7 +54,11 @@
               alt="иконка крестика"
             />
           </button>
-          <form class="popup__form" name="edit-form" novalidate>
+          <form
+            class="popup__form popup__form_profile"
+            name="edit-form"
+            novalidate
+          >
             <h3 class="popup__title">Редактировать профиль</h3>
             <input
               type="text"
@@ -94,11 +98,15 @@
               alt="иконка крестика"
             />
           </button>
-          <form class="popup__form" name="add-card" novalidate>
+          <form
+            class="popup__form popup__form_place"
+            name="add-card"
+            novalidate
+          >
             <h3 class="popup__title">Новое место</h3>
             <input
               type="text"
-              name="place"
+              name="name"
               id="place"
               class="popup__field popup__field_type_place"
               placeholder="Название"
@@ -109,7 +117,7 @@
             <span id="place-error" class="error"></span>
             <input
               type="url"
-              name="url"
+              name="link"
               id="link"
               class="popup__field popup__field_type_url"
               placeholder="Ссылка на картинку"
@@ -157,6 +165,6 @@
         </div>
       </div>
     </template>
-    <script type="module" src="./scripts/index.js" defer></script>
+    <script type="module" src="./pages/index.js" defer></script>
   </body>
 </html>

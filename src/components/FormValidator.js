@@ -71,7 +71,7 @@ export default class FormValidator {
 
   //фукция стирания ошибок при открытии формы
   resetValidation() {
-    this._toggleButtonState();
+    this._toggleButtonState(); //проверка состояния кнопки при открытии
 
     this._inputList.forEach((inputElement) => {
       this._hideInputError(inputElement)
