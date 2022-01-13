@@ -5,13 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mesto</title>
-    <link rel="stylesheet" href="./pages/index.css" />
   </head>
   <body class="page">
     <header class="header">
       <img
         class="header__logo"
-        src="./images/logo.svg"
+        src="<%=require('./images/logo.svg')%>"
         alt="логотип страницы место"
       />
     </header>
@@ -19,7 +18,7 @@
       <section class="profile">
         <img
           class="profile__avatar"
-          src="./images/avatar.jpg"
+          src="<%=require('./images/avatar.jpg')%>"
           alt="аватар пользователя страницы"
         />
         <div class="profile__info">
@@ -27,7 +26,7 @@
           <button type="button" class="profile__edit-button">
             <img
               class="profile__pencil"
-              src="./images/pencil.svg"
+              src="<%=require('./images/pencil.svg')%>"
               alt="иконка карандаша"
             />
           </button>
@@ -36,7 +35,7 @@
         <button type="button" class="profile__add-button">
           <img
             class="profile__plus"
-            src="./images/plus.svg"
+            src="<%=require('./images/plus.svg')%>"
             alt="иконка плюса"
           />
         </button>
@@ -50,7 +49,7 @@
           <button type="button" class="popup__close-button">
             <img
               class="popup__cross"
-              src="./images/close_icon.svg"
+              src="<%=require('./images/close_icon.svg')%>"
               alt="иконка крестика"
             />
           </button>
@@ -94,7 +93,7 @@
           <button type="button" class="popup__close-button">
             <img
               class="popup__cross"
-              src="./images/close_icon.svg"
+              src="<%=require('./images/close_icon.svg')%>"
               alt="иконка крестика"
             />
           </button>
@@ -134,7 +133,7 @@
           <button type="button" class="popup__close-button">
             <img
               class="popup__cross"
-              src="./images/close_icon.svg"
+              src="<%=require('./images/close_icon.svg')%>"
               alt="иконка крестика"
             />
           </button>
@@ -165,6 +164,5 @@
         </div>
       </div>
     </template>
-    <script type="module" src="./pages/index.js" defer></script>
   </body>
 </html>

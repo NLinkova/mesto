@@ -7,6 +7,7 @@ import UserInfo from '../components/UserInfo.js';
 import { items } from "../utils/initialCards.js";
 import { config } from "../utils/configData.js";
 import FormValidator from "../components/FormValidator.js";
+import '../pages/index.css';
 
 //Popups modal windows
 const editProfileModal = document.querySelector('.popup_type_edit-profile');
