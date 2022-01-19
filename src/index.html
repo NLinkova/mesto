@@ -16,11 +16,20 @@
     </header>
     <main class="content">
       <section class="profile">
-        <img
-          class="profile__avatar"
-          src="<%=require('./images/avatar.jpg')%>"
-          alt="аватар пользователя страницы"
-        />
+        <div class="profile__avatar-group">
+          <img
+            class="profile__avatar"
+            src="<%=require('./images/avatar.jpg')%>"
+            alt="аватар пользователя страницы"
+          />
+          <button type="button" class="profile__avatar-button">
+            <img
+              class="profile__pencil_avatar"
+              src="<%=require('./images/pencil_avatar.svg')%>"
+              alt="иконка карандаша"
+            />
+          </button>
+        </div>
         <div class="profile__info">
           <h1 class="profile__name"></h1>
           <button type="button" class="profile__edit-button">
@@ -145,6 +154,54 @@
           <h3 class="popup__caption"></h3>
         </div>
       </div>
+      <!-- попап для удаления карточки -->
+      <div class="popup popup_type_delete-card">
+        <div class="popup__container_delete">
+          <button type="button" class="popup__close-button">
+            <img
+              class="popup__cross"
+              src="<%=require('./images/close_icon.svg')%>"
+              alt="иконка крестика"
+            />
+          </button>
+          <form class="popup__form">
+            <h3 class="popup__title popup__title_small">Вы уверены?</h3>
+            <button
+              type="submit"
+              class="popup__submit-button popup__submit-button_small"
+            >
+              Да
+            </button>
+          </form>
+        </div>
+      </div>
+      <!-- попап для обновления аватара -->
+      <div class="popup popup_type_edit-avatar">
+        <div class="popup__container popup__container_avatar">
+          <button type="button" class="popup__close-button">
+            <img
+              class="popup__cross"
+              src="<%=require('./images/close_icon.svg')%>"
+              alt="иконка крестика"
+            />
+          </button>
+          <form class="popup__form popup__form_avatar" name="avatar" novalidate>
+            <h3 class="popup__title">Обновить аватар</h3>
+            <input
+              type="url"
+              name="avatar"
+              id="avatar"
+              class="popup__field popup__field_type_url"
+              placeholder="Ссылка на картинку"
+              required
+            />
+            <span id="avatar-error" class="error"></span>
+            <button type="submit" class="popup__submit-button">
+              Сохранить
+            </button>
+          </form>
+        </div>
+      </div>
     </main>
     <footer class="footer">
       <p class="footer__copyright">&copy;2021 Mesto Russia</p>
@@ -160,7 +217,10 @@
         />
         <div class="element__group">
           <h2 class="element__title"></h2>
-          <button type="button" class="element__like"></button>
+          <div class="element__like-group">
+            <button type="button" class="element__like"></button>
+            <p class="element__number">2</p>
+          </div>
         </div>
       </div>
     </template>

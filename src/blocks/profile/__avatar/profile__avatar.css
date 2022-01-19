@@ -1,12 +1,18 @@
 .profile__avatar {
   width: 120px;
-  height: 120px;
-  margin: 0 30px 0 0;
+  height: 120px;  
   border-radius: 100px;
+  position: relative;
 }
+
+/* .profile__avatar:hover {
+  opacity: 0.6;
+    transition: opacity .3s;
+} */
 
 @media screen and (max-width: 650px) {
   .profile__avatar {
     margin: 0 auto;
   }
 }
+

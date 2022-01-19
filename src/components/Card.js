@@ -1,9 +1,10 @@
 export default class Card {
-  constructor(templateSelector, handleCardClick, name, link) {
+  constructor(templateSelector, handleCardClick, confirmOpenHandler, name, link) {
     this._name = name;
     this._link = link;
     this._templateSelector = document.querySelector(templateSelector).content; //templateSelector находится в index.js
     this._handleCardClick= handleCardClick;
+    this.confirmOpenHandler = confirmOpenHandler;
   }
 
   _getTemplate() {
@@ -15,13 +16,9 @@ export default class Card {
     e.target.classList.toggle('element__like_active');
   };
 
-  _deleteCard(e) {
-    e.target.closest('.element').remove();
-    this._element = null; // удаляем элемент из ДОМ
-  };
 
   _setEventListeners = () => {
-    this._element.querySelector('.element__delete-button').addEventListener('click', this._deleteCard);
+    this._element.querySelector('.element__delete-button').addEventListener('click', this.confirmOpenHandler);
     this._element.querySelector('.element__like').addEventListener('click', this._likeButton);
     this._element.querySelector('.element__image').addEventListener('click', () => {
       this._handleCardClick(this._name, this._link)
