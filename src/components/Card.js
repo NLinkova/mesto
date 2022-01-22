@@ -1,7 +1,9 @@
 export default class Card {
-  constructor(templateSelector, handleCardClick, confirmOpenHandler, name, link) {
+  constructor(templateSelector, handleCardClick, confirmOpenHandler, name, link, card, api) {
     this._name = name;
     this._link = link;
+    this._card = card;
+    this._api = api;
     this._templateSelector = document.querySelector(templateSelector).content; //templateSelector находится в index.js
     this._handleCardClick= handleCardClick;
     this.confirmOpenHandler = confirmOpenHandler;

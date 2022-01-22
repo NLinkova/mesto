@@ -1,3 +1,4 @@
+import Api from "../components/Api.js";
 import Card from "../components/Card.js";
 import Section from '../components/Section.js';
 import Popup from '../components/Popup.js';
@@ -12,7 +13,7 @@ import '../pages/index.css';
 
 import { 
   config,
-  items,
+  // items,
   editProfileModal,
   addCardModal,
   editProfilePopup,
@@ -34,20 +35,37 @@ import {
   cardListSelector
 } from '../utils/constants.js';
 
+
+
+
+
 // инструкции валидации
 const editFormValidator = new FormValidator(config, editForm);
 const cardFormValidator = new FormValidator(config, addCardForm);
 const avatarFormValidator = new FormValidator(config, avatarForm);
 
 
+const cardApi = new Api({
+	url:'https://mesto.nomoreparties.co/v1/cohort-34/cards',
+	headers: {
+    authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
+		'Content-Type': 'application/json'
+	}
+});
+
 // инструкции для списка, фугкция создания карточки
 
-const createCard = (...args) => new Card('.template-card', handleCardClick, confirmOpenHandler, ...args).generateCard();
+const createCard = (...args) => new Card('.template-card', handleCardClick, confirmOpenHandler, ...args, cardApi).generateCard();
 
 
 //создаем список в секции
-const defaultCardList = new Section({ data: items, renderer }, cardListSelector);
-defaultCardList.renderItems();
+// const defaultCardList = new Section({ data: items, renderer }, cardListSelector);
+// defaultCardList.renderItems();
+cardApi.getCards()
+  .then(data => {
+    const defaultCardList = new Section({ data, renderer }, cardListSelector);
+    defaultCardList.renderItems();
+  }) 
 
 
 // форма добавления карточки
@@ -66,6 +84,14 @@ const profileForm = new PopupWithForm(editProfilePopup, profileFormSubmitHandler
 const editAvatarForm = new PopupWithForm(editAvatarPopup, editFormSubmitHandler);
 
 // экземпляр юсеринфо
+const userInfoApi = new Api({
+	url:'https://nomoreparties.co/v1/cohort-34/users/me ',
+	headers: {
+    authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
+		'Content-Type': 'application/json'
+	}
+});
+
 const currentUser = new UserInfo('profile__name', 'profile__description');
 currentUser.setUserInfo({ name: 'Жак-Ив Кусто', desc: 'Исследователь океана' });
 
