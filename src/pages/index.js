@@ -59,13 +59,14 @@ const createCard = (...args) => new Card('.template-card', handleCardClick, conf
 
 
 //создаем список в секции
-// const defaultCardList = new Section({ data: items, renderer }, cardListSelector);
+const defaultCardList = new Section({ data: [], renderer }, cardListSelector);
 // defaultCardList.renderItems();
+
 cardApi.getCards()
   .then(data => {
-    const defaultCardList = new Section({ data, renderer }, cardListSelector);
-    defaultCardList.renderItems();
+    defaultCardList.renderItems(data);
   }) 
+  .catch(err => console.log(err));
 
 
 // форма добавления карточки
@@ -85,7 +86,7 @@ const editAvatarForm = new PopupWithForm(editAvatarPopup, editFormSubmitHandler)
 
 // экземпляр юсеринфо
 const userInfoApi = new Api({
-	url:'https://nomoreparties.co/v1/cohort-34/users/me ',
+	url:'https://nomoreparties.co/v1/cohort-34/users/me',
 	headers: {
     authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
 		'Content-Type': 'application/json'
@@ -93,12 +94,20 @@ const userInfoApi = new Api({
 });
 
 const currentUser = new UserInfo('profile__name', 'profile__description');
-currentUser.setUserInfo({ name: 'Жак-Ив Кусто', desc: 'Исследователь океана' });
+
+userInfoApi.getUserInfoFromServer()
+  .then(data => {    
+    currentUser.setUserInfo({ name: data.name, about: data.about});
+  })
+  .catch(err => console.log(err));
+
+// const currentUser = new UserInfo('profile__name', 'profile__description');
+// currentUser.setUserInfo({ name: 'Жак-Ив Кусто', desc: 'Исследователь океана' });
 
 // создание карточек в секции
 function renderer(item) {
     // создаание карточки и возвращение ее
-    const cardElement = createCard(item.name, item.link);
+    const cardElement = createCard(item.name, item.link, item.owner); //add user
     this.addItem(cardElement);
     return cardElement;
 }
@@ -119,8 +128,14 @@ function confirmSubmitHandler (evt) {
 }
 
 //хендлер сабмита формы профиля
-function profileFormSubmitHandler(evt, { name, desc })  {
-  currentUser.setUserInfo({ name: name, desc: desc });
+function profileFormSubmitHandler(evt, { name, about })  {
+  // debugger
+  currentUser.setUserInfo({ name: name, about: about });
+  userInfoApi.setUserInfoToServer({ name: name, about: about })
+    .then(([name, about]) => {
+        currentUser.setUserInfo({ name: name, about: about });
+    })
+    .catch(err => console.log(err));
 }
 
 //хендлер сабмита обновления аватара
@@ -141,7 +156,7 @@ editProfileOpenButton.addEventListener('click', () => {
   profileForm.open();
   const currentUserInfo = currentUser.getUserInfo();
   nameInput.value = currentUserInfo.name;
-  jobInput.value = currentUserInfo.desc;
+  jobInput.value = currentUserInfo.about;
 });
 
 // открытие формы обновления аватара
