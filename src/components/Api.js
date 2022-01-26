@@ -11,6 +11,10 @@ export default class Api {
       this._headers = headers;
   }
 
+  getAllData() {
+    return Promise.all([this.getUserInfoFromServer(), this.getCards()])
+  }
+
   getCards() {
       return fetch(this._url, { headers: this._headers })
         .then(checkError);
@@ -33,15 +37,16 @@ export default class Api {
         .then(checkError);
     }
 
-  getUserInfoFromServer() {
+  getUserInfoFromServer(user) {
       return fetch(this._url, { 
           headers: this._headers,
-          body: JSON.stringify() 
+          body: JSON.stringify(user) 
       })
           .then(checkError);
   }
 
   setUserInfoToServer(user) {
+    console.log('Api: setUserInfoToServer(user)');
       return fetch(this._url, { 
           method: 'PATCH',
           headers: this._headers,

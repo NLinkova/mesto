@@ -39,6 +39,7 @@ import {
 
 
 
+
 // инструкции валидации
 const editFormValidator = new FormValidator(config, editForm);
 const cardFormValidator = new FormValidator(config, addCardForm);
@@ -53,20 +54,15 @@ const cardApi = new Api({
 	}
 });
 
-// инструкции для списка, фугкция создания карточки
+// экземпляр юсеринфо
+const userInfoApi = new Api({
+	url:'https://nomoreparties.co/v1/cohort-34/users/me',
+	headers: {
+    authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
+		'Content-Type': 'application/json'
+	}
+});
 
-const createCard = (...args) => new Card('.template-card', handleCardClick, confirmOpenHandler, ...args, cardApi).generateCard();
-
-
-//создаем список в секции
-const defaultCardList = new Section({ data: [], renderer }, cardListSelector);
-// defaultCardList.renderItems();
-
-cardApi.getCards()
-  .then(data => {
-    defaultCardList.renderItems(data);
-  }) 
-  .catch(err => console.log(err));
 
 
 // форма добавления карточки
@@ -84,33 +80,58 @@ const profileForm = new PopupWithForm(editProfilePopup, profileFormSubmitHandler
 // форма обновления аватара
 const editAvatarForm = new PopupWithForm(editAvatarPopup, editFormSubmitHandler);
 
-// экземпляр юсеринфо
-const userInfoApi = new Api({
-	url:'https://nomoreparties.co/v1/cohort-34/users/me',
-	headers: {
-    authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
-		'Content-Type': 'application/json'
-	}
-});
 
+
+let user;
+let avatar;
 const currentUser = new UserInfo('profile__name', 'profile__description');
 
 userInfoApi.getUserInfoFromServer()
-  .then(data => {    
+  .then((data) => {    
     currentUser.setUserInfo({ name: data.name, about: data.about});
+    avatar = data.avatar;
+    user = data._id;
+    console.log('userApi.getUser():  user = ',user); 
+    currentUser.setUserAvatar(avatar);
   })
   .catch(err => console.log(err));
 
 // const currentUser = new UserInfo('profile__name', 'profile__description');
 // currentUser.setUserInfo({ name: 'Жак-Ив Кусто', desc: 'Исследователь океана' });
 
+//создаем список в секции
+
+
+
+// инструкции для списка, фугкция создания карточки
+// debugger
+const createCard = (...args) => new Card('.template-card', handleCardClick, confirmOpenHandler, ...args, user, cardApi).generateCard();
+
+
+const defaultCardList = new Section({ data: [], renderer }, cardListSelector);
 // создание карточек в секции
-function renderer(item) {
+cardApi.getCards()
+  .then(data => {
+    defaultCardList.renderItems(data);
+  }) 
+  .catch(err => console.log(err));
+
+
     // создаание карточки и возвращение ее
-    const cardElement = createCard(item.name, item.link, item.owner); //add user
+let currentCardId;
+function renderer(item) {
+    currentCardId = item._id;
+    const cardElement = createCard(item, user); //add user
     this.addItem(cardElement);
     return cardElement;
 }
+
+
+
+// cardApi.getAllData()
+//   .then([user, data])
+//   .then(console.log(user._id))
+//   .catch(err => console.log(err));
 
 //открытие попапа с картинкой
 function handleCardClick(name, link) {
@@ -119,7 +140,12 @@ function handleCardClick(name, link) {
 
 //хендлер сабмита формы карточки
 function cardFormSubmitHandler (evt, { name, link }) { 
-  defaultCardList.addItem(createCard(name, link)); 
+  cardApi.postCard({ name: name, link: link })
+  .then((data) => {
+    defaultCardList.addItem(createCard(data, user));
+  }) 
+  .catch(err => console.log(err));
+  // defaultCardList.addItem(createCard(name, link)); 
 };
 
 //хендлер сабмита удаления карточки
@@ -137,6 +163,9 @@ function profileFormSubmitHandler(evt, { name, about })  {
     })
     .catch(err => console.log(err));
 }
+
+
+
 
 //хендлер сабмита обновления аватара
 function editFormSubmitHandler(evt, { name, desc })  {

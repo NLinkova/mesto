@@ -1,19 +1,20 @@
 export default class Card {
-  constructor(templateSelector, handleCardClick, confirmOpenHandler, name, link, owner, user, card, api) {
-    this._name = name;
-    this._link = link;
+  constructor(templateSelector, handleCardClick, confirmOpenHandler, card, user, owner, cardApi) {
     this._card = card;
-    this._api = api;
-    this._owner = owner;
+    this._name = card.name;
+    this._link = card.link;
+    
     this._user = user;
+    this._owner = card.owner._id;
+    this._id = card._id;
+    this._cardApi = cardApi;     
     this._templateSelector = document.querySelector(templateSelector).content; //templateSelector находится в index.js
     this._handleCardClick= handleCardClick;
     this.confirmOpenHandler = confirmOpenHandler;
   }
-
   _getTemplate() {
     const cardElement = this._templateSelector.querySelector('.element').cloneNode(true);
-   return cardElement;
+   return cardElement; 
   }
 
   _likeButton(e) {
@@ -29,7 +30,7 @@ export default class Card {
     });
   };
 
-  generateCard = () => {
+  generateCard = (item) => {
     this._element = this._getTemplate();
     const cardElementImage = this._element.querySelector('.element__image');
     const cardElementTitle = this._element.querySelector('.element__title');
@@ -37,6 +38,10 @@ export default class Card {
     cardElementImage.setAttribute('alt', this._name);
     cardElementTitle.textContent = this._name;
     this._setEventListeners();
+    let myCard = (this._owner == this._user);
+    if(!myCard) {
+	    this._element.querySelector('.element__delete-button').classList.add('element__delete-button_hidden');
+    }
     return this._element;
   };
 }

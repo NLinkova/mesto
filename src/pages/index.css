@@ -32,6 +32,7 @@
 @import url("../blocks/element/__like/element__like.css");
 @import url("../blocks/element/__like/_active/element__like_active.css");
 @import url("../blocks/element/__delete-button/element__delete-button.css");
+@import url("../blocks/element/__delete-button/_hidden/element__delete-button_hidden.css");
 
 @import url("../blocks/error/error.css");
 @import url("../blocks/error/_visible/error_visible.css");
