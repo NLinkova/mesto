@@ -78,20 +78,19 @@ const confirmForm = new PopupWithConfirmation(deleteCardPopup, confirmSubmitHand
 const profileForm = new PopupWithForm(editProfilePopup, profileFormSubmitHandler);
 
 // форма обновления аватара
-const editAvatarForm = new PopupWithForm(editAvatarPopup, editFormSubmitHandler);
+const editAvatarForm = new PopupWithForm(editAvatarPopup, avatarFormSubmitHandler);
 
 
 
 let user;
 let avatar;
-const currentUser = new UserInfo('profile__name', 'profile__description');
-
+const currentUser = new UserInfo('profile__name', 'profile__description', '.profile__avatar');
+//here
 userInfoApi.getUserInfoFromServer()
   .then((data) => {    
     currentUser.setUserInfo({ name: data.name, about: data.about});
     avatar = data.avatar;
     user = data._id;
-    console.log('userApi.getUser():  user = ',user); 
     currentUser.setUserAvatar(avatar);
   })
   .catch(err => console.log(err));
@@ -119,9 +118,9 @@ cardApi.getCards()
 
     // создаание карточки и возвращение ее
 let currentCardId;
-function renderer(item) {
-    currentCardId = item._id;
-    const cardElement = createCard(item, user); //add user
+function renderer(card) {
+    currentCardId = card._id;
+    const cardElement = createCard(card, user); //add user
     this.addItem(cardElement);
     return cardElement;
 }
@@ -148,9 +147,13 @@ function cardFormSubmitHandler (evt, { name, link }) {
   // defaultCardList.addItem(createCard(name, link)); 
 };
 
+
 //хендлер сабмита удаления карточки
-function confirmSubmitHandler (evt) {
-  deleteCard();
+function confirmSubmitHandler (evt) {  
+  evt.preventDefault();
+  // debugger
+   this.removeCard(id);
+   confirmForm.close();
 }
 
 //хендлер сабмита формы профиля
@@ -168,8 +171,14 @@ function profileFormSubmitHandler(evt, { name, about })  {
 
 
 //хендлер сабмита обновления аватара
-function editFormSubmitHandler(evt, { name, desc })  {
-  currentUser.setUserInfo({ name: name, desc: desc });
+function avatarFormSubmitHandler (evt, avatar)  {
+  evt.preventDefault();
+  debugger
+  userInfoApi.setUserAvatarToServer(avatar)
+    .then(avatar => {
+      currentUser.setUserAvatar(avatar);
+    })
+    .catch(err => console.log(err));
 }
 
 

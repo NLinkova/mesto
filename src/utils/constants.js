@@ -43,7 +43,6 @@ export const addCardPopup = '.popup_type_add-card';
 export const deleteCardPopup = '.popup_type_delete-card';
 export const imgPopupBig = '.popup_type_image';
 export const editAvatarPopup = '.popup_type_edit-avatar';
-
 export const editForm = editProfileModal.querySelector('.popup__form_profile');
 export const avatarForm = editAvatarModal.querySelector('.popup__form_avatar');
 export const addCardForm = addCardModal.querySelector('.popup__form_place');

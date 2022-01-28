@@ -30,6 +30,7 @@ export default class Api {
   }
 
   deleteCard(id) {
+    console.log('deleteCard(id)');
       return fetch(`${this._url}/${id}`, {
         method: 'DELETE',
         headers: this._headers
@@ -51,6 +52,15 @@ export default class Api {
           method: 'PATCH',
           headers: this._headers,
           body: JSON.stringify(user)
+      })
+        .then(checkError);
+  }
+
+  setUserAvatarToServer(avatar) {
+      return fetch(`${this._url}/avatar`, { 
+          method: 'PATCH',
+          headers: this._headers,
+          body: JSON.stringify(avatar)
       })
         .then(checkError);
   }
