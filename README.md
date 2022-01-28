@@ -29,5 +29,4 @@
 
 ### Ссылка на сайт
 
-Временно неактивна
 https://nlinkova.github.io/mesto/
