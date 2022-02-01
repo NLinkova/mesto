@@ -25,6 +25,7 @@ export const editProfileOpenButton = document.querySelector('.profile__edit-butt
 export const editAvatarButton = document.querySelector('.profile__avatar-button');
 export const addCardOpenButton = document.querySelector('.profile__add-button');
 export const deleteCardButton = document.querySelector('.element__delete-button');
+export const submitButton = document.querySelector('.popup__submit-button');
 
 // Form data
 export const nameInput = editForm.querySelector('.popup__field_type_name');
@@ -37,3 +38,6 @@ export const urlInput = addCardForm.querySelector('.popup__field_type_url');
 export const cardListSelector = '.elements';
 export const templateSelector = '.template-card';
 
+export const currentCard = document.querySelector('.elements');
+
+export const likeCounter = currentCard.querySelector('.element__number');

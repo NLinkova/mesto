@@ -10,7 +10,6 @@ import FormValidator from "../components/FormValidator.js";
 
 import '../pages/index.css';
 
-
 import { 
   config,
   templateSelector,
