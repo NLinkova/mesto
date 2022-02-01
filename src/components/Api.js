@@ -11,17 +11,17 @@ export default class Api {
       this._headers = headers;
   }
 
-  getAllData() {
-    return Promise.all([this.getUserInfoFromServer(), this.getCards()])
-  }
+  // getAllData() {
+  //   return Promise.all([this.getUserInfoFromServer(), this.getCards()])
+  // }
 
   getCards() {
-      return fetch(this._url, { headers: this._headers })
+      return fetch(`${this._url}/cards`, { headers: this._headers })
         .then(checkError);
   }
 
   postCard(card) {
-      return fetch(this._url, {
+      return fetch(`${this._url}/cards`, {
         method: 'POST',
         headers: this._headers,
         body: JSON.stringify(card)
@@ -29,26 +29,40 @@ export default class Api {
         .then(checkError);
   }
 
+  putLike(id) {
+    return fetch(`${this._url}/cards/${id}/likes`, {
+      method: 'PUT',
+      headers: this._headers,
+    })
+      .then(checkError);
+  }
+
+  deleteLike(id) {
+    return fetch(`${this._url}/cards/${id}/likes`, {
+      method: 'DELETE',
+      headers: this._headers,
+    })
+      .then(checkError);
+  }
+
   deleteCard(id) {
-    console.log('deleteCard(id)');
-      return fetch(`${this._url}/${id}`, {
+      return fetch(`${this._url}/cards/${id}`, {
         method: 'DELETE',
         headers: this._headers
       })
         .then(checkError);
     }
 
-  getUserInfoFromServer(user) {
-      return fetch(this._url, { 
+  getUserInfoFromServer() {
+      return fetch(`${this._url}/users/me`, { 
           headers: this._headers,
-          body: JSON.stringify(user) 
+          body: JSON.stringify() 
       })
           .then(checkError);
   }
 
   setUserInfoToServer(user) {
-    console.log('Api: setUserInfoToServer(user)');
-      return fetch(this._url, { 
+      return fetch(`${this._url}/users/me`, { 
           method: 'PATCH',
           headers: this._headers,
           body: JSON.stringify(user)
@@ -57,7 +71,7 @@ export default class Api {
   }
 
   setUserAvatarToServer(avatar) {
-      return fetch(`${this._url}/avatar`, { 
+      return fetch(`${this._url}/users/me/avatar`, { 
           method: 'PATCH',
           headers: this._headers,
           body: JSON.stringify(avatar)

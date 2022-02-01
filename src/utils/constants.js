@@ -7,33 +7,6 @@ export const config = {
   errorClass: 'error_visible'
 };
 
-export const items = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
-
 //Popups modal windows
 export const editProfileModal = document.querySelector('.popup_type_edit-profile');
 export const addCardModal = document.querySelector('.popup_type_add-card');
@@ -62,4 +35,5 @@ export const urlInput = addCardForm.querySelector('.popup__field_type_url');
 
 // Template
 export const cardListSelector = '.elements';
+export const templateSelector = '.template-card';
 

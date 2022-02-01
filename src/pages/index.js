@@ -13,9 +13,10 @@ import '../pages/index.css';
 
 import { 
   config,
-  // items,
+  templateSelector,
   editProfileModal,
   addCardModal,
+  editAvatarModal,
   editProfilePopup,
   addCardPopup,
   deleteCardPopup,
@@ -25,18 +26,14 @@ import {
   addCardForm,
   avatarForm,
   editProfileOpenButton,
+  submitButton,
   deleteCardButton,
   addCardOpenButton,
   editAvatarButton,
   nameInput,
   jobInput,
-  placeInput,
-  urlInput,
   cardListSelector
 } from '../utils/constants.js';
-
-
-
 
 
 
@@ -46,23 +43,13 @@ const cardFormValidator = new FormValidator(config, addCardForm);
 const avatarFormValidator = new FormValidator(config, avatarForm);
 
 
-const cardApi = new Api({
-	url:'https://mesto.nomoreparties.co/v1/cohort-34/cards',
+const api = new Api({
+	url:'https://mesto.nomoreparties.co/v1/cohort-34',
 	headers: {
     authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
 		'Content-Type': 'application/json'
 	}
 });
-
-// экземпляр юсеринфо
-const userInfoApi = new Api({
-	url:'https://nomoreparties.co/v1/cohort-34/users/me',
-	headers: {
-    authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
-		'Content-Type': 'application/json'
-	}
-});
-
 
 
 // форма добавления карточки
@@ -72,7 +59,14 @@ const cardForm = new PopupWithForm(addCardPopup, cardFormSubmitHandler);
 const imgPopup = new PopupWithImage(imgPopupBig);
 
 //попап удаления картинки
-const confirmForm = new PopupWithConfirmation(deleteCardPopup, confirmSubmitHandler);
+//!! проблема с сабмитом формы
+const confirmForm = new PopupWithConfirmation(deleteCardPopup, () => {
+  api.deleteCard(id)
+          .then((data) => {
+            this._element.remove();
+          })
+          .catch(err => console.log(err));
+});
 
 //форма редактирование профиля
 const profileForm = new PopupWithForm(editProfilePopup, profileFormSubmitHandler);
@@ -80,13 +74,12 @@ const profileForm = new PopupWithForm(editProfilePopup, profileFormSubmitHandler
 // форма обновления аватара
 const editAvatarForm = new PopupWithForm(editAvatarPopup, avatarFormSubmitHandler);
 
-
-
+// экземпляр инфо юзера
 let user;
 let avatar;
 const currentUser = new UserInfo('profile__name', 'profile__description', '.profile__avatar');
 //here
-userInfoApi.getUserInfoFromServer()
+api.getUserInfoFromServer()
   .then((data) => {    
     currentUser.setUserInfo({ name: data.name, about: data.about});
     avatar = data.avatar;
@@ -95,74 +88,92 @@ userInfoApi.getUserInfoFromServer()
   })
   .catch(err => console.log(err));
 
-// const currentUser = new UserInfo('profile__name', 'profile__description');
-// currentUser.setUserInfo({ name: 'Жак-Ив Кусто', desc: 'Исследователь океана' });
-
-//создаем список в секции
-
 
 
 // инструкции для списка, фугкция создания карточки
-// debugger
-const createCard = (...args) => new Card('.template-card', handleCardClick, confirmOpenHandler, ...args, user, cardApi).generateCard();
+const createCard = (...args) => 
+   new Card({
+    templateSelector,
+    handleCardClick, 
+    handleConfirmDelete, 
+    likeHandler
+   },
+    ...args, api).generateCard()
+;
 
-
+//создаем список в секции
 const defaultCardList = new Section({ data: [], renderer }, cardListSelector);
 // создание карточек в секции
-cardApi.getCards()
+api.getCards()
   .then(data => {
     defaultCardList.renderItems(data);
   }) 
   .catch(err => console.log(err));
 
 
-    // создаание карточки и возвращение ее
-let currentCardId;
-function renderer(card) {
-    currentCardId = card._id;
-    const cardElement = createCard(card, user); //add user
+// создаание карточки и возвращение ее
+function renderer(item) { // item
+    const cardElement = createCard(item, user); 
     this.addItem(cardElement);
     return cardElement;
 }
 
 
-
-// cardApi.getAllData()
-//   .then([user, data])
-//   .then(console.log(user._id))
-//   .catch(err => console.log(err));
-
-//открытие попапа с картинкой
-function handleCardClick(name, link) {
-  imgPopup.open(name, link);
-}
-
 //хендлер сабмита формы карточки
 function cardFormSubmitHandler (evt, { name, link }) { 
-  cardApi.postCard({ name: name, link: link })
-  .then((data) => {
+  // debugger
+  api.postCard({ name: name, link: link })
+  .then((data) => {        
+    addCardModal.querySelector(".popup__submit-button").textContent = 'Сохранение...';
     defaultCardList.addItem(createCard(data, user));
+    cardForm.close();
   }) 
   .catch(err => console.log(err));
-  // defaultCardList.addItem(createCard(name, link)); 
 };
 
 
-//хендлер сабмита удаления карточки
-function confirmSubmitHandler (evt) {  
-  evt.preventDefault();
-  // debugger
-   this.removeCard(id);
-   confirmForm.close();
+// хендлер сабмита удаления карточки
+function handleConfirmDelete () {  
+  confirmForm.open();
+    api.deleteCard(this._id)
+          .then((data) => {
+            this._element.remove();
+            confirmForm.close();
+          })
+          .catch(err => console.log(err));
+}
+
+
+
+// хендлер лайка карточки
+function likeHandler () {
+  this._element.querySelector('.element__like').classList.remove("element__like_active");
+  const even = (element) => element._id == this._user;
+    if (this._likes.some(even)) {
+      api.deleteLike(this._id)
+      .then((data) => {
+        this._element.querySelector('.element__like').classList.remove("element__like_active");
+        this._element.querySelector('.element__number').textContent = data.likes.length;         
+      })
+      .catch(err => console.log(err));
+    } else {
+      api.putLike(this._id)
+        .then((data) => {
+          this._element.querySelector('.element__like').classList.add("element__like_active");
+          this._element.querySelector('.element__number').textContent = data.likes.length;
+        })
+        .catch(err => console.log(err));
+    }
 }
 
 //хендлер сабмита формы профиля
 function profileFormSubmitHandler(evt, { name, about })  {
-  // debugger
   currentUser.setUserInfo({ name: name, about: about });
-  userInfoApi.setUserInfoToServer({ name: name, about: about })
-    .then(([name, about]) => {
+  api.setUserInfoToServer({ name: name, about: about })
+    .then((data) => {
+      editProfileModal.querySelector(".popup__submit-button").textContent = 'Сохранение...';
         currentUser.setUserInfo({ name: name, about: about });
+        profileForm.close();
     })
     .catch(err => console.log(err));
 }
@@ -172,11 +183,13 @@ function profileFormSubmitHandler(evt, { name, about })  {
 
 //хендлер сабмита обновления аватара
 function avatarFormSubmitHandler (evt, avatar)  {
+  // debugger
   evt.preventDefault();
-  debugger
-  userInfoApi.setUserAvatarToServer(avatar)
-    .then(avatar => {
+  api.setUserAvatarToServer(avatar)
+    .then(data => {
+      editAvatarModal.querySelector(".popup__submit-button").textContent = 'Сохранение...';
       currentUser.setUserAvatar(avatar);
+      editAvatarForm.close();
     })
     .catch(err => console.log(err));
 }
@@ -203,12 +216,16 @@ editAvatarButton.addEventListener('click', () => {
   editAvatarForm.open();
 });
 
-// открытие формы удаления карточки
-function confirmOpenHandler (evt) {
-  confirmForm.open();
+
+// // открытие формы удаления карточки
+// function confirmOpenHandler (evt) {
+//   confirmForm.open();
+// }
+
+//открытие попапа с картинкой
+function handleCardClick(name, link) {
+  imgPopup.open(name, link);
 }
-
-
 
 //установка слушателей закрытия
 cardForm.setEventListeners();
