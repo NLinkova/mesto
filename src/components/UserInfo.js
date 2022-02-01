@@ -9,24 +9,16 @@ export default class UserInfo {
     }
 
     getUserInfo() {
-        return {
-            name: this._userName.textContent,
-            about: this._userAbout.textContent
-        };
+        this._profileFields = {}
+        this._profileFields.name = this._userName.textContent;
+        this._profileFields.about = this._userAbout.textContent;
+        return this._profileFields;
     }
 
-    getUserAvatar() {
-		return {
-			avatar: this._userAvatar.src,
-		};
-	}
-
-    setUserInfo({ name, about }) {
-        this._userName.textContent = name;
-        this._userAbout.textContent = about;
+    setUserInfo(data) {
+        this._userName.textContent = data.name;
+        this._userAbout.textContent = data.about;
+        this._userAvatar.src = data.avatar;
     }
 
-    setUserAvatar(avatar) {
-		this._userAvatar.src = avatar;
-	}
 }

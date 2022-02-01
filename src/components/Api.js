@@ -61,23 +61,28 @@ export default class Api {
           .then(checkError);
   }
 
-  setUserInfoToServer(user) {
-      return fetch(`${this._url}/users/me`, { 
-          method: 'PATCH',
-          headers: this._headers,
-          body: JSON.stringify(user)
-      })
-        .then(checkError);
-  }
+  setUserInfoToServer(data) {
+    return fetch(`${this._url}/users/me`, { 
+        method: 'PATCH',
+        headers: this._headers,
+        body: JSON.stringify({
+          name: data.name,
+          about: data.about
+        })
+    })
+      .then(checkError);
+}
 
-  setUserAvatarToServer(avatar) {
-      return fetch(`${this._url}/users/me/avatar`, { 
-          method: 'PATCH',
-          headers: this._headers,
-          body: JSON.stringify(avatar)
-      })
-        .then(checkError);
-  }
+setUserAvatarToServer(data) {
+    return fetch(`${this._url}/users/me/avatar`, { 
+        method: 'PATCH',
+        headers: this._headers,
+        body: JSON.stringify({
+          avatar: data.avatar,
+        })
+    })
+      .then(checkError);
+}
 
 
 }

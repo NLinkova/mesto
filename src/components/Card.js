@@ -36,27 +36,30 @@ export default class Card {
 
   _likeHandler () {
     this._element.querySelector('.element__like').classList.toggle("element__like_active");
-    const even = (element) => element._id == this._user;
-    if (this._likes.some(even)) {
-      this._api
-        .deleteLike(this._id)
-        .then((data) => {
-          this._element.querySelector('.element__like').classList.remove("element__like_active"); 
-          this._element.querySelector('.element__number').textContent = data.likes.length; 
-          this._likes = data.likes; 
-        })
-        .catch(err => console.log(err));
-    } else {
-      this._api
-          .putLike(this._id)
+    // const even = (element) => element._id == this._user;
+    this._api.getUserInfoFromServer()
+      .then(userData => {
+      if (this._likes.some((item) => {return item._id === userData._id})) {
+        this._api
+          .deleteLike(this._id)
           .then((data) => {
-            this._element.querySelector('.element__like').classList.add("element__like_active"); 
+            this._element.querySelector('.element__like').classList.remove("element__like_active"); 
             this._element.querySelector('.element__number').textContent = data.likes.length; 
             this._likes = data.likes; 
           })
           .catch(err => console.log(err));
-    }
+      } else {
+        this._api
+            .putLike(this._id)
+            .then((data) => {
+              this._element.querySelector('.element__like').classList.add("element__like_active"); 
+              this._element.querySelector('.element__number').textContent = data.likes.length; 
+              this._likes = data.likes; 
+            })
+            .catch(err => console.log(err));
+      }})
   }
+  
   
   _setEventListeners = () => {    
     this._element.querySelector('.element__delete-button').addEventListener('click', () => {

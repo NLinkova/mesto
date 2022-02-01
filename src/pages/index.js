@@ -68,15 +68,11 @@ const editAvatarForm = new PopupWithForm(editAvatarPopup, avatarFormSubmitHandle
 
 // экземпляр инфо юзера
 let user;
-let avatar;
 const currentUser = new UserInfo('profile__name', 'profile__description', '.profile__avatar');
 
 api.getUserInfoFromServer()
   .then((data) => {    
-    currentUser.setUserInfo({ name: data.name, about: data.about});
-    avatar = data.avatar;
-    user = data._id;
-    currentUser.setUserAvatar(avatar);
+    currentUser.setUserInfo(data);
   })
   .catch(err => console.log(err));
 
@@ -124,24 +120,25 @@ function cardFormSubmitHandler (evt, { name, link }) {
 };
 
 //хендлер сабмита формы профиля
-function profileFormSubmitHandler(evt, { name, about })  {
-  currentUser.setUserInfo({ name: name, about: about });
+function profileFormSubmitHandler(evt, data)  {
+  evt.preventDefault();
   editProfileModal.querySelector(".popup__submit-button").textContent = 'Сохранение...';
-  api.setUserInfoToServer({ name: name, about: about })  
+  api.setUserInfoToServer(data)  
     .then((data) => {      
-      currentUser.setUserInfo({ name: name, about: about });
+      currentUser.setUserInfo(data);
       profileForm.close();
     })
     .catch(err => console.log(err));
 }
 
 //хендлер сабмита обновления аватара
-function avatarFormSubmitHandler (evt, avatar)  {
+function avatarFormSubmitHandler (evt, data)  {
   evt.preventDefault();
+  // debugger
   editAvatarModal.querySelector(".popup__submit-button").textContent = 'Сохранение...';
-  api.setUserAvatarToServer(avatar)
-    .then(data => {
-      currentUser.setUserAvatar(avatar);
+  api.setUserAvatarToServer(data)
+    .then(res => {
+      currentUser.setUserInfo(res);
       editAvatarForm.close();
     })
     .catch(err => console.log(err));
