@@ -6,11 +6,6 @@
   object-fit: cover;
 }
 
-/* .profile__avatar:hover {
-  opacity: 0.6;
-    transition: opacity .3s;
-} */
-
 @media screen and (max-width: 650px) {
   .profile__avatar {
     margin: 0 auto;
