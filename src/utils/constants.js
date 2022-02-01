@@ -37,7 +37,3 @@ export const urlInput = addCardForm.querySelector('.popup__field_type_url');
 // Template
 export const cardListSelector = '.elements';
 export const templateSelector = '.template-card';
-
-export const currentCard = document.querySelector('.elements');
-
-export const likeCounter = currentCard.querySelector('.element__number');

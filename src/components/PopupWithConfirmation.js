@@ -1,24 +1,28 @@
 import Popup from "./Popup.js"
-
+import { api } from "../pages/index.js";
 export default class PopupWithConfirmation extends Popup {
-  constructor(popupSelector, formSubmitHandler, api) {
+  constructor(popupSelector, card, api) {
     super(popupSelector);
     this._submittButton = this._popup.querySelector('.popup__submit-button');
-    // this._popupForm = this._popup.querySelector(".popup__form");
-    this._formSubmitHandler = formSubmitHandler;
-    this._api = api;
  }
 
   close() {
     super.close();
  }
 
-//  formSubmitHandler() {
+ formSubmitHandler (id, element){
+  this._submittButton.addEventListener("click", () => {
+    api.deleteCard(id)
+        .then(() => {
+          element.remove();
+          this.close();
+        })
+        .catch(err => console.log(err));
+      })
+ }
 
-//  }
   setEventListeners() {
-    super.setEventListeners();    
-    this._submittButton.addEventListener("click", this._formSubmitHandler);
+    super.setEventListeners(); 
   }
 }
 
