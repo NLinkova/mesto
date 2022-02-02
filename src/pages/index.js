@@ -73,6 +73,7 @@ const currentUser = new UserInfo('profile__name', 'profile__description', '.prof
 api.getUserInfoFromServer()
   .then((data) => {    
     currentUser.setUserInfo(data);
+    user = data._id;
   })
   .catch(err => console.log(err));
 

@@ -1,4 +1,4 @@
-.popup__container_delete {
+.popup__delete-container {
     margin: 270px auto auto;
     background-color: #FFFFFF;
     width: 430px;
@@ -8,7 +8,7 @@
   }
   
   @media screen and (max-width: 650px) {
-    .popup__container_delete {
+    .popup__delete-container {
       width: 282px;
       height: 181px;
     }
