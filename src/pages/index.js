@@ -17,6 +17,9 @@ import {
   editProfileModal,
   addCardModal,
   editAvatarModal,
+  submitAvatarButton,
+  submitCardButton,
+  submitProfileButton,
   editProfilePopup,
   addCardPopup,
   deleteCardPopup,
@@ -30,7 +33,11 @@ import {
   editAvatarButton,
   nameInput,
   jobInput,
-  cardListSelector
+  cardListSelector,
+  userAboutSelector,
+  userAvatarSelector,
+  userNameSelector,
+  submitButton
 } from '../utils/constants.js';
 
 
@@ -40,8 +47,7 @@ const editFormValidator = new FormValidator(config, editForm);
 const cardFormValidator = new FormValidator(config, addCardForm);
 const avatarFormValidator = new FormValidator(config, avatarForm);
 
-
-export const api = new Api({
+const api = new Api({
 	url:'https://mesto.nomoreparties.co/v1/cohort-34',
 	headers: {
     authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
@@ -52,13 +58,13 @@ export const api = new Api({
 
 // форма добавления карточки
 const cardForm = new PopupWithForm(addCardPopup, cardFormSubmitHandler);
+// const submitCardButton = addCardPopup.querySelector('.popup__submit-button');
 
 //попап с картинкой
 const imgPopup = new PopupWithImage(imgPopupBig);
 
 //попап удаления картинки
-//!! проблема с сабмитом формы
-const confirmForm = new PopupWithConfirmation(deleteCardPopup);
+const confirmForm = new PopupWithConfirmation(deleteCardPopup, api);
 
 //форма редактирование профиля
 const profileForm = new PopupWithForm(editProfilePopup, profileFormSubmitHandler);
@@ -68,15 +74,20 @@ const editAvatarForm = new PopupWithForm(editAvatarPopup, avatarFormSubmitHandle
 
 // экземпляр инфо юзера
 let user;
-const currentUser = new UserInfo('profile__name', 'profile__description', '.profile__avatar');
+let avatar;
+const currentUser = new UserInfo(userNameSelector, userAboutSelector, userAvatarSelector);
 
-api.getUserInfoFromServer()
-  .then((data) => {    
-    currentUser.setUserInfo(data);
-    user = data._id;
+//создаем список в секции
+const defaultCardList = new Section({ data: [], renderer }, cardListSelector);
+
+Promise.all([api.getCards(), api.getUserInfoFromServer()])
+  .then(([CardsData, userData]) => {
+    user = userData._id;
+    defaultCardList.renderItems(CardsData); //  тут отрисовка карточек
+    currentUser.setUserInfo(userData); // тут установка данных пользователя
+    avatar = userData.avatar;
   })
   .catch(err => console.log(err));
-
 
 
 // инструкции для списка, фугкция создания карточки
@@ -86,63 +97,78 @@ const createCard = (...args) =>
     handleCardClick, 
     handleConfirmDelete: (id, element) => {
       confirmForm.open();
-      confirmForm.formSubmitHandler(id, element)
-    }
+      confirmForm.setSubmitAction(() => {
+        api.deleteCard(id())   
+          .then(() => {   
+            element.remove();  
+            confirmForm.close();   
+          })   
+          .catch(err => console.log(err)); 
+      }) 
+      }
   },
-    ...args, api).generateCard()
-;
-
-//создаем список в секции
-const defaultCardList = new Section({ data: [], renderer }, cardListSelector);
-// создание карточек в секции
-api.getCards()
-  .then(data => {
-    defaultCardList.renderItems(data);
-  }) 
-  .catch(err => console.log(err));
+    ...args, api).generateCard();
 
 
 // создаание карточки и возвращение ее
 function renderer(item) { // item
     const cardElement = createCard(item, user); 
-    this.addItem(cardElement);
+    defaultCardList.addItem(cardElement);
     return cardElement;
 }
 
+
 //хендлер сабмита формы карточки
 function cardFormSubmitHandler (evt, { name, link }) { 
-  addCardModal.querySelector(".popup__submit-button").textContent = 'Сохранение...';
+  submitCardButton.textContent = 'Сохранение...';
   api.postCard({ name: name, link: link })
   .then((data) => {        
     defaultCardList.addItem(createCard(data, user));
     cardForm.close();
+    cardForm.formReset();
   }) 
-  .catch(err => console.log(err));
+  .catch(err => console.log(err))
+  .finally(
+    () =>
+    submitButton.textContent =
+        "Сохранить")
 };
 
 //хендлер сабмита формы профиля
 function profileFormSubmitHandler(evt, data)  {
   evt.preventDefault();
-  editProfileModal.querySelector(".popup__submit-button").textContent = 'Сохранение...';
+  // currentUser.setUserInfo(data);
+  submitProfileButton.textContent = 'Сохранение...';
   api.setUserInfoToServer(data)  
     .then((data) => {      
       currentUser.setUserInfo(data);
       profileForm.close();
+      profileForm.formReset();
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
+    .finally(
+      () =>
+      submitButton.textContent =
+          "Сохранить");
+    
 }
 
 //хендлер сабмита обновления аватара
 function avatarFormSubmitHandler (evt, data)  {
   evt.preventDefault();
   // debugger
-  editAvatarModal.querySelector(".popup__submit-button").textContent = 'Сохранение...';
+  submitAvatarButton.textContent = 'Сохранение...';
   api.setUserAvatarToServer(data)
     .then(res => {
       currentUser.setUserInfo(res);
       editAvatarForm.close();
+      editAvatarForm.formReset();
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
+    .finally(
+      () =>
+      submitButton.textContent =
+          "Сохранить");
 }
 
 
@@ -184,3 +210,4 @@ editAvatarForm.setEventListeners();
 editFormValidator.enableValidation();
 cardFormValidator.enableValidation();
 avatarFormValidator.enableValidation();
+

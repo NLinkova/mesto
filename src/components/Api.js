@@ -1,23 +1,19 @@
-const checkError = res => {
-  if (res.ok) {
-    return res.json();
-  }    
-  return Promise.reject('Something wrong!');
-};
-
 export default class Api {
   constructor({ url, headers }) {
       this._url = url;
       this._headers = headers;
   }
 
-  // getAllData() {
-  //   return Promise.all([this.getUserInfoFromServer(), this.getCards()])
-  // }
+  _checkResponse(res) {
+    if (res.ok) {
+      return res.json();
+    }    
+    return Promise.reject(`Something wrong: ${res.status}`);
+}
 
   getCards() {
       return fetch(`${this._url}/cards`, { headers: this._headers })
-        .then(checkError);
+      .then(this._checkResponse);
   }
 
   postCard(card) {
@@ -26,7 +22,7 @@ export default class Api {
         headers: this._headers,
         body: JSON.stringify(card)
       })
-        .then(checkError);
+      .then(this._checkResponse);
   }
 
   putLike(id) {
@@ -34,7 +30,7 @@ export default class Api {
       method: 'PUT',
       headers: this._headers,
     })
-      .then(checkError);
+    .then(this._checkResponse);
   }
 
   deleteLike(id) {
@@ -42,7 +38,7 @@ export default class Api {
       method: 'DELETE',
       headers: this._headers,
     })
-      .then(checkError);
+    .then(this._checkResponse);
   }
 
   deleteCard(id) {
@@ -50,7 +46,7 @@ export default class Api {
         method: 'DELETE',
         headers: this._headers
       })
-        .then(checkError);
+      .then(this._checkResponse);
     }
 
   getUserInfoFromServer() {
@@ -58,31 +54,29 @@ export default class Api {
           headers: this._headers,
           body: JSON.stringify() 
       })
-          .then(checkError);
+      .then(this._checkResponse);
   }
 
   setUserInfoToServer(data) {
-    return fetch(`${this._url}/users/me`, { 
-        method: 'PATCH',
-        headers: this._headers,
-        body: JSON.stringify({
-          name: data.name,
-          about: data.about
-        })
-    })
-      .then(checkError);
-}
+      return fetch(`${this._url}/users/me`, { 
+          method: 'PATCH',
+          headers: this._headers,
+          body: JSON.stringify({
+            name: data.name,
+            about: data.about
+          })
+      })
+      .then(this._checkResponse);
+  }
 
-setUserAvatarToServer(data) {
-    return fetch(`${this._url}/users/me/avatar`, { 
-        method: 'PATCH',
-        headers: this._headers,
-        body: JSON.stringify({
-          avatar: data.avatar,
-        })
-    })
-      .then(checkError);
-}
-
-
+  setUserAvatarToServer(data) {
+      return fetch(`${this._url}/users/me/avatar`, { 
+          method: 'PATCH',
+          headers: this._headers,
+          body: JSON.stringify({
+            avatar: data.avatar,
+          })
+      })
+      .then(this._checkResponse);
+    }
 }

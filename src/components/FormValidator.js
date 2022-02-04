@@ -2,16 +2,15 @@ export default class FormValidator {
   constructor(config, formElement) {
     this._config = config;
     this._formElement = formElement;
-    const { formSelector, inputSelector, submitButtonSelector,
+    const { formSelector, inputSelector, submitButton,
       inactiveButtonClass, inputErrorClass, errorClass
     } = config;
 
-    this._inputSelector = this._formElement.querySelector(inputSelector);
-    this._submitButtonSelector = this._formElement.querySelector(submitButtonSelector);
+    this._submitButton = this._formElement.querySelector(submitButton);
     this._inactiveButtonClass = config.inactiveButtonClass;
     this._inputErrorClass = config.inputErrorClass;
     this._errorClass = config.errorClass;
-    this._inputList = Array.from(this._formElement.querySelectorAll('input'));
+    this._inputList = Array.from(this._formElement.querySelectorAll(inputSelector));
   }
 
   _showInputError = (inputElement) => {
@@ -22,6 +21,7 @@ export default class FormValidator {
   };
 
   _hideInputError = (inputElement) => {
+    
     const errorElement = this._formElement.querySelector(`#${inputElement.id}-error`);
     inputElement.classList.remove(this._inputErrorClass); // убирает ошибку при валидности поля
     errorElement.textContent = '';
@@ -50,14 +50,14 @@ export default class FormValidator {
 
    // отключение кнопки
   _disableSubmitButton = () => {
-    this._submitButtonSelector.classList.add(this._inactiveButtonClass);
-    this._submitButtonSelector.setAttribute("disabled", "disabled");
+    this._submitButton.classList.add(this._inactiveButtonClass);
+    this._submitButton.setAttribute("disabled", "disabled");
   };
 
    // включение кнопки
   _enableSubmitButton = () => {
-    this._submitButtonSelector.classList.remove(this._inactiveButtonClass);
-    this._submitButtonSelector.removeAttribute("disabled", "disabled");
+    this._submitButton.classList.remove(this._inactiveButtonClass);
+    this._submitButton.removeAttribute("disabled", "disabled");
   };
 
    // переключение состояние кнопки сабмит при валидности полей
@@ -72,7 +72,6 @@ export default class FormValidator {
   //фукция стирания ошибок при открытии формы
   resetValidation() {
     this._toggleButtonState(); //проверка состояния кнопки при открытии
-
     this._inputList.forEach((inputElement) => {
       this._hideInputError(inputElement)
     });
@@ -82,8 +81,7 @@ export default class FormValidator {
     this._inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._checkInputValidity(inputElement);
-        // чтобы проверять его при изменении любого из полей
-        this._toggleButtonState(this._submitButtonSelector, this._inactiveButtonClass);
+        this._toggleButtonState();
       });
     });
   };
