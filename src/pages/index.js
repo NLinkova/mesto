@@ -1,22 +1,18 @@
 import Api from "../components/Api.js";
 import Card from "../components/Card.js";
-import Section from '../components/Section.js';
-import Popup from '../components/Popup.js';
+import Section from "../components/Section.js";
+import Popup from "../components/Popup.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
 import PopupWithForm from "../components/PopupWithForm.js";
-import UserInfo from '../components/UserInfo.js';
+import UserInfo from "../components/UserInfo.js";
 import FormValidator from "../components/FormValidator.js";
 
-import '../pages/index.css';
+import "../pages/index.css";
 
-
-import { 
+import {
   config,
   templateSelector,
-  editProfileModal,
-  addCardModal,
-  editAvatarModal,
   submitAvatarButton,
   submitCardButton,
   submitProfileButton,
@@ -37,10 +33,8 @@ import {
   userAboutSelector,
   userAvatarSelector,
   userNameSelector,
-  submitButton
-} from '../utils/constants.js';
-
-
+  submitButton,
+} from "../utils/constants.js";
 
 // инструкции валидации
 const editFormValidator = new FormValidator(config, editForm);
@@ -48,13 +42,12 @@ const cardFormValidator = new FormValidator(config, addCardForm);
 const avatarFormValidator = new FormValidator(config, avatarForm);
 
 const api = new Api({
-	url:'https://mesto.nomoreparties.co/v1/cohort-34',
-	headers: {
-    authorization: '187a8fd4-ac28-43dd-80b6-20429361e8d5',
-		'Content-Type': 'application/json'
-	}
+  url: "https://mesto.nomoreparties.co/v1/cohort-34",
+  headers: {
+    authorization: "187a8fd4-ac28-43dd-80b6-20429361e8d5",
+    "Content-Type": "application/json",
+  },
 });
-
 
 // форма добавления карточки
 const cardForm = new PopupWithForm(addCardPopup, cardFormSubmitHandler);
@@ -64,18 +57,28 @@ const cardForm = new PopupWithForm(addCardPopup, cardFormSubmitHandler);
 const imgPopup = new PopupWithImage(imgPopupBig);
 
 //попап удаления картинки
-const confirmForm = new PopupWithConfirmation(deleteCardPopup, api);
+const confirmForm = new PopupWithConfirmation(deleteCardPopup);
 
 //форма редактирование профиля
-const profileForm = new PopupWithForm(editProfilePopup, profileFormSubmitHandler);
+const profileForm = new PopupWithForm(
+  editProfilePopup,
+  profileFormSubmitHandler
+);
 
 // форма обновления аватара
-const editAvatarForm = new PopupWithForm(editAvatarPopup, avatarFormSubmitHandler);
+const editAvatarForm = new PopupWithForm(
+  editAvatarPopup,
+  avatarFormSubmitHandler
+);
 
 // экземпляр инфо юзера
 let user;
 let avatar;
-const currentUser = new UserInfo(userNameSelector, userAboutSelector, userAvatarSelector);
+const currentUser = new UserInfo(
+  userNameSelector,
+  userAboutSelector,
+  userAvatarSelector
+);
 
 //создаем список в секции
 const defaultCardList = new Section({ data: [], renderer }, cardListSelector);
@@ -87,100 +90,92 @@ Promise.all([api.getCards(), api.getUserInfoFromServer()])
     currentUser.setUserInfo(userData); // тут установка данных пользователя
     avatar = userData.avatar;
   })
-  .catch(err => console.log(err));
-
+  .catch((err) => console.log(err));
 
 // инструкции для списка, фугкция создания карточки
-const createCard = (...args) => 
-   new Card({
-    templateSelector,
-    handleCardClick, 
-    handleConfirmDelete: (id, element) => {
-      confirmForm.open();
-      confirmForm.setSubmitAction(() => {
-        api.deleteCard(id())   
-          .then(() => {   
-            element.remove();  
-            confirmForm.close();   
-          })   
-          .catch(err => console.log(err)); 
-      }) 
-      }
-  },
-    ...args, api).generateCard();
-
+const createCard = (...args) =>
+  new Card(
+    {
+      templateSelector,
+      handleCardClick,
+      handleConfirmDelete: (id, element) => {
+        confirmForm.open();
+        confirmForm.setSubmitAction(() => {
+          api
+            .deleteCard(id)
+            .then(() => {
+              element.remove();
+              confirmForm.close();
+            })
+            .catch((err) => console.log(err));
+        });
+      },
+    },
+    ...args,
+    api
+  ).generateCard();
 
 // создаание карточки и возвращение ее
-function renderer(item) { // item
-    const cardElement = createCard(item, user); 
-    defaultCardList.addItem(cardElement);
-    return cardElement;
+function renderer(item) {
+  // item
+  const cardElement = createCard(item, user);
+  defaultCardList.addItem(cardElement);
+  return cardElement;
 }
 
-
 //хендлер сабмита формы карточки
-function cardFormSubmitHandler (evt, { name, link }) { 
-  submitCardButton.textContent = 'Сохранение...';
-  api.postCard({ name: name, link: link })
-  .then((data) => {        
-    defaultCardList.addItem(createCard(data, user));
-    cardForm.close();
-    cardForm.formReset();
-  }) 
-  .catch(err => console.log(err))
-  .finally(
-    () =>
-    submitButton.textContent =
-        "Сохранить")
-};
+function cardFormSubmitHandler(evt, { name, link }) {
+  submitCardButton.textContent = "Сохранение...";
+  api
+    .postCard({ name: name, link: link })
+    .then((data) => {
+      defaultCardList.addItem(createCard(data, user));
+      cardForm.close();
+      cardForm.formReset();
+    })
+    .catch((err) => console.log(err))
+    .finally(() => (submitButton.textContent = "Сохранить"));
+}
 
 //хендлер сабмита формы профиля
-function profileFormSubmitHandler(evt, data)  {
+function profileFormSubmitHandler(evt, data) {
   evt.preventDefault();
-  // currentUser.setUserInfo(data);
-  submitProfileButton.textContent = 'Сохранение...';
-  api.setUserInfoToServer(data)  
-    .then((data) => {      
+  submitProfileButton.textContent = "Сохранение...";
+  api
+    .setUserInfoToServer(data)
+    .then((data) => {
       currentUser.setUserInfo(data);
       profileForm.close();
       profileForm.formReset();
     })
-    .catch(err => console.log(err))
-    .finally(
-      () =>
-      submitButton.textContent =
-          "Сохранить");
-    
+    .catch((err) => console.log(err))
+    .finally(() => (submitButton.textContent = "Сохранить"));
 }
 
 //хендлер сабмита обновления аватара
-function avatarFormSubmitHandler (evt, data)  {
+function avatarFormSubmitHandler(evt, data) {
   evt.preventDefault();
-  // debugger
-  submitAvatarButton.textContent = 'Сохранение...';
-  api.setUserAvatarToServer(data)
-    .then(res => {
+  submitAvatarButton.textContent = "Сохранение...";
+  api
+    .setUserAvatarToServer(data)
+    .then((res) => {
       currentUser.setUserInfo(res);
       editAvatarForm.close();
       editAvatarForm.formReset();
     })
-    .catch(err => console.log(err))
-    .finally(
-      () =>
-      submitButton.textContent =
-          "Сохранить");
+    .catch((err) => console.log(err))
+    .finally(() => (submitButton.textContent = "Сохранить"));
 }
 
-
 // открытие формы добавления карточки
-addCardOpenButton.addEventListener('click', () => {
-  cardFormValidator.resetValidation(); //стирает ошибки от предыдущего открытия и меняет кнопку
+addCardOpenButton.addEventListener("click", () => {
+  cardFormValidator.resetValidation();
   cardForm.open();
 });
 
 // открытие формы редактирования профиля
-editProfileOpenButton.addEventListener('click', () => {
-  editFormValidator.resetValidation(); //стирает ошибки от предыдущего открытия и меняет кнопку
+editProfileOpenButton.addEventListener("click", () => {
+  editFormValidator.resetValidation();
   profileForm.open();
   const currentUserInfo = currentUser.getUserInfo();
   nameInput.value = currentUserInfo.name;
@@ -188,8 +183,8 @@ editProfileOpenButton.addEventListener('click', () => {
 });
 
 // открытие формы обновления аватара
-editAvatarButton.addEventListener('click', () => {
-  avatarFormValidator.resetValidation(); //стирает ошибки от предыдущего открытия и меняет кнопку
+editAvatarButton.addEventListener("click", () => {
+  avatarFormValidator.resetValidation();
   editAvatarForm.open();
 });
 
@@ -205,9 +200,7 @@ profileForm.setEventListeners();
 imgPopup.setEventListeners();
 editAvatarForm.setEventListeners();
 
-
 //валидация форм
 editFormValidator.enableValidation();
 cardFormValidator.enableValidation();
 avatarFormValidator.enableValidation();
-
