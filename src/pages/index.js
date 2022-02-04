@@ -33,7 +33,6 @@ import {
   userAboutSelector,
   userAvatarSelector,
   userNameSelector,
-  submitButton,
 } from "../utils/constants.js";
 
 // инструкции валидации
@@ -57,7 +56,7 @@ const cardForm = new PopupWithForm(addCardPopup, cardFormSubmitHandler);
 const imgPopup = new PopupWithImage(imgPopupBig);
 
 //попап удаления картинки
-const confirmForm = new PopupWithConfirmation(deleteCardPopup);
+const confirmForm = new PopupWithConfirmation(deleteCardPopup, api);
 
 //форма редактирование профиля
 const profileForm = new PopupWithForm(
@@ -73,7 +72,6 @@ const editAvatarForm = new PopupWithForm(
 
 // экземпляр инфо юзера
 let user;
-let avatar;
 const currentUser = new UserInfo(
   userNameSelector,
   userAboutSelector,
@@ -88,7 +86,6 @@ Promise.all([api.getCards(), api.getUserInfoFromServer()])
     user = userData._id;
     defaultCardList.renderItems(CardsData); //  тут отрисовка карточек
     currentUser.setUserInfo(userData); // тут установка данных пользователя
-    avatar = userData.avatar;
   })
   .catch((err) => console.log(err));
 
@@ -131,25 +128,24 @@ function cardFormSubmitHandler(evt, { name, link }) {
     .then((data) => {
       defaultCardList.addItem(createCard(data, user));
       cardForm.close();
-      cardForm.formReset();
     })
     .catch((err) => console.log(err))
-    .finally(() => (submitButton.textContent = "Сохранить"));
+    .finally(() => (submitCardButton.textContent = "Сохранить"));
 }
 
 //хендлер сабмита формы профиля
 function profileFormSubmitHandler(evt, data) {
   evt.preventDefault();
+  // currentUser.setUserInfo(data);
   submitProfileButton.textContent = "Сохранение...";
   api
     .setUserInfoToServer(data)
     .then((data) => {
       currentUser.setUserInfo(data);
       profileForm.close();
-      profileForm.formReset();
     })
     .catch((err) => console.log(err))
-    .finally(() => (submitButton.textContent = "Сохранить"));
+    .finally(() => (submitProfileButton.textContent = "Сохранить"));
 }
 
 //хендлер сабмита обновления аватара
@@ -161,21 +157,20 @@ function avatarFormSubmitHandler(evt, data) {
     .then((res) => {
       currentUser.setUserInfo(res);
       editAvatarForm.close();
-      editAvatarForm.formReset();
     })
     .catch((err) => console.log(err))
-    .finally(() => (submitButton.textContent = "Сохранить"));
+    .finally(() => (submitAvatarButton.textContent = "Сохранить"));
 }
 
 // открытие формы добавления карточки
 addCardOpenButton.addEventListener("click", () => {
-  cardFormValidator.resetValidation();
+  cardFormValidator.resetValidation(); //стирает ошибки от предыдущего открытия и меняет кнопку
   cardForm.open();
 });
 
 // открытие формы редактирования профиля
 editProfileOpenButton.addEventListener("click", () => {
-  editFormValidator.resetValidation();
+  editFormValidator.resetValidation(); //стирает ошибки от предыдущего открытия и меняет кнопку
   profileForm.open();
   const currentUserInfo = currentUser.getUserInfo();
   nameInput.value = currentUserInfo.name;
@@ -184,7 +179,7 @@ editProfileOpenButton.addEventListener("click", () => {
 
 // открытие формы обновления аватара
 editAvatarButton.addEventListener("click", () => {
-  avatarFormValidator.resetValidation();
+  avatarFormValidator.resetValidation(); //стирает ошибки от предыдущего открытия и меняет кнопку
   editAvatarForm.open();
 });
 

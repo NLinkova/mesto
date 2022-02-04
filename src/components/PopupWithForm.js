@@ -15,13 +15,13 @@ export default class PopupWithForm extends Popup {
     return this._formValues;
   }
 
-  formReset() {
+  close() {
+    super.close();
     this._popupForm.reset();
   }
 
   _handler = (evt) => {
     this._formSubmitHandler(evt, this._getInputValues());
-    this.close();
   };
 
   setEventListeners() {

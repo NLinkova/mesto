@@ -13,7 +13,7 @@ export default class Card {
     this._likes = card.likes;
     this._user = user;
     this._api = api;
-    this._template = document.querySelector(templateSelector).content;
+    this._template = document.querySelector(templateSelector).content; //templateSelector находится в index.js
     this._handleCardClick = handleCardClick;
     this._handleConfirmDelete = handleConfirmDelete;
   }
@@ -42,31 +42,29 @@ export default class Card {
   }
 
   _likeHandler() {
-    this._api.getUserInfoFromServer().then((userData) => {
-      if (
-        this._likes.some((item) => {
-          return item._id === userData._id;
+    if (
+      this._likes.some((item) => {
+        return item._id === this._user;
+      })
+    ) {
+      this._api
+        .deleteLike(this._id)
+        .then((data) => {
+          this._likeButton.classList.remove("element__like_active");
+          this._likeCounter.textContent = data.likes.length;
+          this._likes = data.likes;
         })
-      ) {
-        this._api
-          .deleteLike(this._id)
-          .then((data) => {
-            this._likeButton.classList.remove("element__like_active");
-            this._likeCounter.textContent = data.likes.length;
-            this._likes = data.likes;
-          })
-          .catch((err) => console.log(err));
-      } else {
-        this._api
-          .putLike(this._id)
-          .then((data) => {
-            this._likeButton.classList.add("element__like_active");
-            this._likeCounter.textContent = data.likes.length;
-            this._likes = data.likes;
-          })
-          .catch((err) => console.log(err));
-      }
-    });
+        .catch((err) => console.log(err));
+    } else {
+      this._api
+        .putLike(this._id)
+        .then((data) => {
+          this._likeButton.classList.add("element__like_active");
+          this._likeCounter.textContent = data.likes.length;
+          this._likes = data.likes;
+        })
+        .catch((err) => console.log(err));
+    }
   }
 
   _setEventListeners = () => {
@@ -74,7 +72,7 @@ export default class Card {
       this._handleConfirmDelete(this._id, this._element);
     });
     this._likeButton.addEventListener("click", () => {
-      this._likeHandler(this);
+      this._likeHandler(this); //._element, this._user
     });
     this._cardElementImage.addEventListener("click", () => {
       this._handleCardClick(this._name, this._link);
