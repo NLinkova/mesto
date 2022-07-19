@@ -114,7 +114,6 @@ const createCard = (...args) =>
 
 // создаание карточки и возвращение ее
 function renderer(item) {
-  // item
   const cardElement = createCard(item, user);
   defaultCardList.addItem(cardElement);
   return cardElement;
