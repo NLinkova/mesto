@@ -12,7 +12,7 @@
       <img
         class="header__logo"
         src="<%=require('./images/logo.svg')%>"
-        alt="логотип страницы место"
+        alt="logo"
       />
     </header>
     <main class="content">
@@ -21,13 +21,13 @@
           <img
             class="profile__avatar"
             src="<%=require('./images/avatar.jpg')%>"
-            alt="аватар пользователя страницы"
+            alt="avatar"
           />
           <button type="button" class="profile__avatar-button">
             <img
               class="profile__avatar-pencil"
               src="<%=require('./images/pencil_avatar.svg')%>"
-              alt="иконка карандаша"
+              alt="pencil"
             />
           </button>
         </div>
@@ -37,7 +37,7 @@
             <img
               class="profile__pencil"
               src="<%=require('./images/pencil.svg')%>"
-              alt="иконка карандаша"
+              alt="pencil"
             />
           </button>
           <p class="profile__description"></p>
@@ -46,7 +46,7 @@
           <img
             class="profile__plus"
             src="<%=require('./images/plus.svg')%>"
-            alt="иконка плюса"
+            alt="plus"
           />
         </button>
       </section>
@@ -60,7 +60,7 @@
             <img
               class="popup__cross"
               src="<%=require('./images/close_icon.svg')%>"
-              alt="иконка крестика"
+              alt="close icon"
             />
           </button>
           <form
@@ -68,13 +68,13 @@
             name="edit-form"
             novalidate
           >
-            <h3 class="popup__title">Редактировать профиль</h3>
+            <h3 class="popup__title">Edit profile</h3>
             <input
               type="text"
               name="name"
               id="user-name"
               class="popup__field popup__field_type_name"
-              placeholder="Имя"
+              placeholder="Name"
               minlength="2"
               maxlength="40"
               required
@@ -85,15 +85,13 @@
               name="about"
               id="about"
               class="popup__field popup__field_type_desc"
-              placeholder="Описание"
+              placeholder="Description"
               minlength="2"
               maxlength="200"
               required
             />
             <span id="about-error" class="error"></span>
-            <button type="submit" class="popup__submit-button">
-              Сохранить
-            </button>
+            <button type="submit" class="popup__submit-button">Save</button>
           </form>
         </div>
       </div>
@@ -104,7 +102,7 @@
             <img
               class="popup__cross"
               src="<%=require('./images/close_icon.svg')%>"
-              alt="иконка крестика"
+              alt="close icon"
             />
           </button>
           <form
@@ -112,13 +110,13 @@
             name="add-card"
             novalidate
           >
-            <h3 class="popup__title">Новое место</h3>
+            <h3 class="popup__title">НNew photo</h3>
             <input
               type="text"
               name="name"
               id="place"
               class="popup__field popup__field_type_place"
-              placeholder="Название"
+              placeholder="Name"
               minlength="2"
               maxlength="30"
               required
@@ -129,11 +127,11 @@
               name="link"
               id="link"
               class="popup__field popup__field_type_url"
-              placeholder="Ссылка на картинку"
+              placeholder="URL"
               required
             />
             <span id="link-error" class="error"></span>
-            <button type="submit" class="popup__submit-button">Создать</button>
+            <button type="submit" class="popup__submit-button">Post</button>
           </form>
         </div>
       </div>
@@ -144,7 +142,7 @@
             <img
               class="popup__cross"
               src="<%=require('./images/close_icon.svg')%>"
-              alt="иконка крестика"
+              alt="close icon"
             />
           </button>
           <img
@@ -162,16 +160,16 @@
             <img
               class="popup__cross"
               src="<%=require('./images/close_icon.svg')%>"
-              alt="иконка крестика"
+              alt="close icon"
             />
           </button>
           <div class="popup__form" name="confirm-form">
-            <h3 class="popup__title popup__title_small">Вы уверены?</h3>
+            <h3 class="popup__title popup__title_small">Are you sure?</h3>
             <button
               type="button"
               class="popup__submit-button popup__submit-button_small"
             >
-              Да
+              Yes
             </button>
           </div>
         </div>
@@ -183,23 +181,21 @@
             <img
               class="popup__cross"
               src="<%=require('./images/close_icon.svg')%>"
-              alt="иконка крестика"
+              alt="close icon"
             />
           </button>
           <form class="popup__form popup__form_avatar" name="avatar" novalidate>
-            <h3 class="popup__title">Обновить аватар</h3>
+            <h3 class="popup__title">Update avatar</h3>
             <input
               type="url"
               name="avatar"
               id="avatar"
               class="popup__field popup__field_type_url"
-              placeholder="Ссылка на картинку"
+              placeholder="URL"
               required
             />
             <span id="avatar-error" class="error"></span>
-            <button type="submit" class="popup__submit-button">
-              Сохранить
-            </button>
+            <button type="submit" class="popup__submit-button">Save</button>
           </form>
         </div>
       </div>

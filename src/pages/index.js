@@ -121,7 +121,7 @@ function renderer(item) {
 
 //хендлер сабмита формы карточки
 function cardFormSubmitHandler(evt, { name, link }) {
-  submitCardButton.textContent = "Сохранение...";
+  submitCardButton.textContent = "Saving...";
   api
     .postCard({ name: name, link: link })
     .then((data) => {
@@ -129,14 +129,14 @@ function cardFormSubmitHandler(evt, { name, link }) {
       cardForm.close();
     })
     .catch((err) => console.log(err))
-    .finally(() => (submitCardButton.textContent = "Сохранить"));
+    .finally(() => (submitCardButton.textContent = "Save"));
 }
 
 //хендлер сабмита формы профиля
 function profileFormSubmitHandler(evt, data) {
   evt.preventDefault();
   // currentUser.setUserInfo(data);
-  submitProfileButton.textContent = "Сохранение...";
+  submitProfileButton.textContent = "Saving...";
   api
     .setUserInfoToServer(data)
     .then((data) => {
@@ -144,13 +144,13 @@ function profileFormSubmitHandler(evt, data) {
       profileForm.close();
     })
     .catch((err) => console.log(err))
-    .finally(() => (submitProfileButton.textContent = "Сохранить"));
+    .finally(() => (submitProfileButton.textContent = "Save"));
 }
 
 //хендлер сабмита обновления аватара
 function avatarFormSubmitHandler(evt, data) {
   evt.preventDefault();
-  submitAvatarButton.textContent = "Сохранение...";
+  submitAvatarButton.textContent = "Saving...";
   api
     .setUserAvatarToServer(data)
     .then((res) => {
@@ -158,7 +158,7 @@ function avatarFormSubmitHandler(evt, data) {
       editAvatarForm.close();
     })
     .catch((err) => console.log(err))
-    .finally(() => (submitAvatarButton.textContent = "Сохранить"));
+    .finally(() => (submitAvatarButton.textContent = "Save"));
 }
 
 // открытие формы добавления карточки
